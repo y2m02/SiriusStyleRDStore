@@ -1,9 +1,9 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using BillingSystem.Utility.Extensions;
+using SiriusStyleRdStore.Utility.Extensions;
 
-namespace BillingSystem.Utility.Validations
+namespace SiriusStyleRdStore.Utility.Validations
 {
     public class CustomValidator : ValidationAttribute
     {

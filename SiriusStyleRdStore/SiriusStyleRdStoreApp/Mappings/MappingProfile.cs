@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using SiriusStyleRdStore.Entities.Models;
+using SiriusStyleRdStore.Entities.Responses;
 
 namespace SiriusStyleRdStoreApp.Mappings
 {
@@ -6,6 +8,8 @@ namespace SiriusStyleRdStoreApp.Mappings
     {
         public MappingProfile()
         {
+            CreateMap<Customer, GetCustomerResponse>();
+
             //CreateMap<Category, GetCategoryResponse>();
             //CreateMap<CreateCategoryRequest, Category>();
             //CreateMap<UpdateCategoryRequest, Category>();

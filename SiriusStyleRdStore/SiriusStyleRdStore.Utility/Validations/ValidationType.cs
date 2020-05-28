@@ -1,4 +1,4 @@
-﻿namespace BillingSystem.Utility.Validations
+﻿namespace SiriusStyleRdStore.Utility.Validations
 {
     public enum ValidationType
     {

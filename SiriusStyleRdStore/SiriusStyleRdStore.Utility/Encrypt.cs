@@ -3,7 +3,7 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace BillingSystem.Utility
+namespace SiriusStyleRdStore.Utility
 {
     public sealed class Encrypt
     {

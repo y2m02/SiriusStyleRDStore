@@ -6,9 +6,9 @@ namespace SiriusStyleRdStore.Repositories.Repositories
 {
     public class BaseRepository
     {
-        protected readonly SiriusStyleRdStoreSystemContext Context;
+        protected readonly SiriusStyleRdStoreContext Context;
 
-        public BaseRepository(SiriusStyleRdStoreSystemContext context)
+        public BaseRepository(SiriusStyleRdStoreContext context)
         {
             Context = context;
         }

@@ -1,10 +1,79 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using SiriusStyleRdStore.Entities.Models;
 
 namespace SiriusStyleRdStore.Repositories.Repositories
 {
-    public class CustomerRepository
+    public interface ICustomerRepository
     {
+        Task<IEnumerable<Customer>> GetAll();
+        Task<Customer> GetById(int customerId);
+        Task<Customer> Create(Customer customer);
+        Task<Customer> Update(Customer customer);
+        Task<Customer> Delete(Customer customer);
+    }
+
+    public class CustomerRepository : BaseRepository, ICustomerRepository
+    {
+        public CustomerRepository(SiriusStyleRdStoreContext context) : base(context)
+        {
+        }
+
+        public async Task<IEnumerable<Customer>> GetAll()
+        {
+            return await Context.Customer
+                .Where(w => w.DeletedOn == null)
+                .ToListAsync()
+                .ConfigureAwait(false);
+        }
+
+        public async Task<Customer> GetById(int customerId)
+        {
+            return await Context.Customer
+                .SingleAsync(w => w.DeletedOn == null)
+                .ConfigureAwait(false);
+        }
+
+        public async Task<Customer> Create(Customer customer)
+        {
+            await Context.Customer.AddAsync(customer);
+            await Save();
+
+            return customer;
+        }
+
+        public async Task<Customer> Update(Customer customer)
+        {
+            Context.Attach(customer);
+            AddPropertiesToModify(customer, new List<string>
+            {
+                nameof(customer.FullName),
+                nameof(customer.City),
+                nameof(customer.Sector),
+                nameof(customer.Address),
+                nameof(customer.PhoneNumber),
+                nameof(customer.Facebook),
+                nameof(customer.Instagram)
+            });
+
+            await Save();
+
+            return customer;
+        }
+
+        public async Task<Customer> Delete(Customer customer)
+        {
+            Context.Attach(customer);
+            AddPropertiesToModify(customer, new List<string>
+            {
+                nameof(customer.DeletedOn)
+            });
+
+            await Save();
+
+            return customer;
+        }
     }
 }

@@ -39,11 +39,11 @@ namespace SiriusStyleRdStoreApp
             // Add Kendo UI services to the services container
             services.AddKendo();
 
-            services.AddDbContext<SiriusStyleRdStoreSystemContext>(w =>
-                w.UseSqlServer(Configuration.GetConnectionString("SiriusStyleRdStoreConnection")));
-
             var mappingConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingProfile()); });
             services.AddSingleton(mappingConfig.CreateMapper());
+
+            services.AddDbContext<SiriusStyleRdStoreContext>(w =>
+                w.UseSqlServer(Configuration.GetConnectionString("SiriusStyleRdStoreConnection")));
 
             var builder = new ContainerBuilder();
             builder.RegisterModule(new CompositionRoot.CompositionRoot());

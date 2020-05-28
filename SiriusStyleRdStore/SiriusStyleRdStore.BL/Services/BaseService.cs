@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using SiriusStyleRdStore.Entities.Responses;
 
-namespace BillingSystem.BL.Services
+namespace SiriusStyleRdStore.BL.Services
 {
     public class BaseService
     {

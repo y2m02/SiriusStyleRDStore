@@ -14,7 +14,7 @@ namespace SiriusStyleRdStoreApp.CompositionRoot
         {
             base.Load(builder);
 
-            builder.RegisterType<SiriusStyleRdStoreSystemContext>().InstancePerRequest();
+            builder.RegisterType<SiriusStyleRdStoreContext>().InstancePerRequest();
 
             RegisterQueryServices(builder, typeof(CustomerService).Assembly);
             RegisterQueryServices(builder, typeof(CustomerRepository).Assembly);

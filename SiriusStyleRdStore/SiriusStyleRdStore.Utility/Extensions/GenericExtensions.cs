@@ -1,4 +1,4 @@
-﻿namespace BillingSystem.Utility.Extensions
+﻿namespace SiriusStyleRdStore.Utility.Extensions
 {
     public static class GenericExtensions
     {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace BillingSystem.Utility.Extensions
+namespace SiriusStyleRdStore.Utility.Extensions
 {
     public static class EnumerableExtensions
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BillingSystem.Utility
+namespace SiriusStyleRdStore.Utility
 {
     public static class CodeGenerator
     {
