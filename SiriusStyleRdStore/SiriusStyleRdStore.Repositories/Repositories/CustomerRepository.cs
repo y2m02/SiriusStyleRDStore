@@ -11,8 +11,11 @@ namespace SiriusStyleRdStore.Repositories.Repositories
         Task<IEnumerable<Customer>> GetAll();
         Task<Customer> GetById(int customerId);
         Task<Customer> Create(Customer customer);
+        Task<IEnumerable<Customer>> BatchCreate(List<Customer> customers);
         Task<Customer> Update(Customer customer);
+        Task<IEnumerable<Customer>> BatchUpdate(List<Customer> customers);
         Task<Customer> Delete(Customer customer);
+        Task<IEnumerable<Customer>> BatchDelete(List<Customer> customers);
     }
 
     public class CustomerRepository : BaseRepository, ICustomerRepository
@@ -44,6 +47,14 @@ namespace SiriusStyleRdStore.Repositories.Repositories
             return customer;
         }
 
+        public async Task<IEnumerable<Customer>> BatchCreate(List<Customer> customers)
+        {
+            await Context.Customer.AddRangeAsync(customers);
+            await Save();
+
+            return customers;
+        }
+
         public async Task<Customer> Update(Customer customer)
         {
             Context.Attach(customer);
@@ -63,6 +74,28 @@ namespace SiriusStyleRdStore.Repositories.Repositories
             return customer;
         }
 
+        public async Task<IEnumerable<Customer>> BatchUpdate(List<Customer> customers)
+        {
+            foreach (var customer in customers)
+            {
+                Context.Attach(customer);
+                AddPropertiesToModify(customer, new List<string>
+                {
+                    nameof(customer.FullName),
+                    nameof(customer.City),
+                    nameof(customer.Sector),
+                    nameof(customer.Address),
+                    nameof(customer.PhoneNumber),
+                    nameof(customer.Facebook),
+                    nameof(customer.Instagram)
+                });
+
+                await Save();
+            }
+
+            return customers;
+        }
+
         public async Task<Customer> Delete(Customer customer)
         {
             Context.Attach(customer);
@@ -74,6 +107,22 @@ namespace SiriusStyleRdStore.Repositories.Repositories
             await Save();
 
             return customer;
+        }
+
+        public async Task<IEnumerable<Customer>> BatchDelete(List<Customer> customers)
+        {
+            foreach (var customer in customers)
+            {
+                Context.Attach(customer);
+                AddPropertiesToModify(customer, new List<string>
+                {
+                    nameof(customer.DeletedOn)
+                });
+
+                await Save();
+            }
+
+            return customers;
         }
     }
 }

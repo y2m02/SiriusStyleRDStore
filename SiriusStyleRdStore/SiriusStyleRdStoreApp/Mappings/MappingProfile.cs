@@ -1,6 +1,8 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
 using SiriusStyleRdStore.Entities.Models;
-using SiriusStyleRdStore.Entities.Responses;
+using SiriusStyleRdStore.Entities.Requests.Customer;
+using SiriusStyleRdStore.Entities.ViewModels;
 
 namespace SiriusStyleRdStoreApp.Mappings
 {
@@ -8,7 +10,20 @@ namespace SiriusStyleRdStoreApp.Mappings
     {
         public MappingProfile()
         {
-            CreateMap<Customer, GetCustomerResponse>();
+            CreateMap<Customer, CustomerViewModel>();
+
+            CreateMap<CustomerViewModel, CreateCustomerRequest>();
+            CreateMap<CreateCustomerRequest, Customer>()
+                .ForMember(destination => destination.CreatedOn,
+                    member => member.MapFrom(field => DateTime.Now));
+
+            CreateMap<CustomerViewModel, UpdateCustomerRequest>();
+            CreateMap<UpdateCustomerRequest, Customer>();
+
+            CreateMap<CustomerViewModel, DeleteCustomerRequest>();
+            CreateMap<DeleteCustomerRequest, Customer>()
+                .ForMember(destination => destination.DeletedOn,
+                    member => member.MapFrom(field => DateTime.Now));
 
             //CreateMap<Category, GetCategoryResponse>();
             //CreateMap<CreateCategoryRequest, Category>();

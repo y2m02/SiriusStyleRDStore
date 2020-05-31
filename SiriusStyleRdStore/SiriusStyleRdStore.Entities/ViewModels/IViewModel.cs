@@ -1,17 +1,17 @@
 ﻿using System.Collections.Generic;
 
-namespace SiriusStyleRdStore.Entities.Responses
+namespace SiriusStyleRdStore.Entities.ViewModels
 {
-    public interface IResponse
+    public interface IViewModel
     {
     }
 
-    public class Success<T> : IResponse
+    public class Success<T> : IViewModel
     {
         public T Response { get; set; }
     }
 
-    public class Error : IResponse
+    public class Error : IViewModel
     {
         public Error(string errorMessage)
         {
@@ -21,7 +21,7 @@ namespace SiriusStyleRdStore.Entities.Responses
         public string ErrorMessage { get; }
     }
 
-    public class Validation : IResponse
+    public class Validation : IViewModel
     {
         public Validation(IEnumerable<string> validationErrors)
         {

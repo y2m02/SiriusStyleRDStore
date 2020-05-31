@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Threading.Tasks;
 using SiriusStyleRdStore.Entities.Responses;
+using SiriusStyleRdStore.Entities.ViewModels;
 
 namespace SiriusStyleRdStore.BL.Services
 {
     public class BaseService
     {
-        protected async Task<IResponse> HandleErrors(Func<Task<IResponse>> response)
+        protected async Task<IViewModel> HandleErrors(Func<Task<IViewModel>> response)
         {
             try
             {
@@ -18,7 +19,7 @@ namespace SiriusStyleRdStore.BL.Services
             }
         }
 
-        protected async Task<IResponse> HandleErrors<T>(Func<T, Task<IResponse>> response, T request)
+        protected async Task<IViewModel> HandleErrors<T>(Func<T, Task<IViewModel>> response, T request)
         {
             try
             {
@@ -30,7 +31,7 @@ namespace SiriusStyleRdStore.BL.Services
             }
         }
 
-        protected IResponse Success<T>(T response)
+        protected IViewModel Success<T>(T response)
         {
             return new Success<T>
             {

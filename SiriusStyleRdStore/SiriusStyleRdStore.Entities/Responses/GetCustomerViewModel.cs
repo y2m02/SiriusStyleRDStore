@@ -1,6 +1,8 @@
-﻿namespace SiriusStyleRdStore.Entities.Responses
+﻿using SiriusStyleRdStore.Entities.ViewModels;
+
+namespace SiriusStyleRdStore.Entities.Responses
 {
-    public class GetCustomerResponse : IResponse
+    public class GetCustomerViewModel : IViewModel
     {
         public int CustomerId { get; set; }
 

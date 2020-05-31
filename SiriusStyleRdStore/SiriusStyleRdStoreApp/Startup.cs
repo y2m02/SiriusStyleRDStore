@@ -78,7 +78,7 @@ namespace SiriusStyleRdStoreApp
             {
                 endpoints.MapControllerRoute(
                     "default",
-                    "{controller=Home}/{action=Index}/{id?}");
+                    "{controller=Customer}/{action=Index}/{id?}");
             });
         }
     }

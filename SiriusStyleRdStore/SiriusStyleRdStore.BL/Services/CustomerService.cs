@@ -1,19 +1,26 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
+using SiriusStyleRdStore.Entities.Models;
+using SiriusStyleRdStore.Entities.Requests.Customer;
 using SiriusStyleRdStore.Entities.Responses;
+using SiriusStyleRdStore.Entities.ViewModels;
 using SiriusStyleRdStore.Repositories.Repositories;
 
 namespace SiriusStyleRdStore.BL.Services
 {
     public interface ICustomerService
     {
-        Task<IResponse> GetAll();
+        Task<IViewModel> GetAll();
 
-        Task<IResponse> GetById(int customerId);
-        //Task<IResponse> Create(CreateCustomerRequest customer);
-        //Task<IResponse> Update(UpdateCustomerRequest customer);
-        //Task<IResponse> Delete(DeletePersonRequest customer);
+        Task<IViewModel> GetById(int customerId);
+        Task<IViewModel> Create(CreateCustomerRequest customer);
+        Task<IViewModel> BatchCreate(List<CreateCustomerRequest> customers);
+        Task<IViewModel> Update(UpdateCustomerRequest customer);
+        Task<IViewModel> BatchUpdate(List<UpdateCustomerRequest> customers);
+        Task<IViewModel> Delete(DeleteCustomerRequest customer);
+        Task<IViewModel> BatchDelete(List<DeleteCustomerRequest> customers);
     }
 
     public class CustomerService : BaseService, ICustomerService
@@ -28,68 +35,107 @@ namespace SiriusStyleRdStore.BL.Services
             _customerRepository = customerRepository;
         }
 
-        public async Task<IResponse> GetAll()
+        public async Task<IViewModel> GetAll()
         {
             return await HandleErrors(Get);
 
-            async Task<IResponse> Get()
+            async Task<IViewModel> Get()
             {
-                return Success(_mapper.Map<IEnumerable<GetCustomerResponse>>(await _customerRepository
+                return Success(_mapper.Map<IEnumerable<CustomerViewModel>>(await _customerRepository
                     .GetAll().ConfigureAwait(false)));
             }
         }
 
-        public async Task<IResponse> GetById(int customerId)
+        public async Task<IViewModel> GetById(int customerId)
         {
             return await HandleErrors(Get, customerId);
 
-            async Task<IResponse> Get(int id)
+            async Task<IViewModel> Get(int id)
             {
                 return Success(
-                    _mapper.Map<GetCustomerResponse>(await _customerRepository
+                    _mapper.Map<CustomerViewModel>(await _customerRepository
                         .GetById(id)
                         .ConfigureAwait(false))
                 );
             }
         }
 
-        //public async Task<IResponse> Create(CreateCustomerRequest customer)
-        //{
-        //    return await HandleErrors(Add, customer);
+        public async Task<IViewModel> Create(CreateCustomerRequest customer)
+        {
+            return await HandleErrors(Add, customer);
 
-        //    async Task<IResponse> Add(CreateCustomerRequest request)
-        //    {
-        //        var response = await _customerRepository.Create(_mapper.Map<Person>(request))
-        //            .ConfigureAwait(false);
+            async Task<IViewModel> Add(CreateCustomerRequest request)
+            {
+                var response = await _customerRepository.Create(_mapper.Map<Customer>(request))
+                    .ConfigureAwait(false);
 
-        //        return Success(_mapper.Map<GetCustomerResponse>(response));
-        //    }
-        //}
+                return Success(_mapper.Map<CustomerViewModel>(response));
+            }
+        }
 
-        //public async Task<IResponse> Update(UpdateCustomerRequest customer)
-        //{
-        //    return await HandleErrors(Modify, customer);
+        public async Task<IViewModel> BatchCreate(List<CreateCustomerRequest> customers)
+        {
+            return await HandleErrors(Add, customers);
 
-        //    async Task<IResponse> Modify(UpdateCustomerRequest request)
-        //    {
-        //        var response = await _customerRepository.Update(_mapper.Map<Person>(request))
-        //            .ConfigureAwait(false);
+            async Task<IViewModel> Add(List<CreateCustomerRequest> request)
+            {
+                var response = await _customerRepository.BatchCreate(_mapper.Map<List<Customer>>(request))
+                    .ConfigureAwait(false);
 
-        //        return Success(_mapper.Map<GetCustomerResponse>(response));
-        //    }
-        //}
+                return Success(_mapper.Map<List<CustomerViewModel>>(response));
+            }
+        }
 
-        //public async Task<IResponse> Delete(DeletePersonRequest customer)
-        //{
-        //    return await HandleErrors(Remove, customer);
+        public async Task<IViewModel> Update(UpdateCustomerRequest customer)
+        {
+            return await HandleErrors(Modify, customer);
 
-        //    async Task<IResponse> Remove(DeletePersonRequest request)
-        //    {
-        //        var response = await _customerRepository.Delete(_mapper.Map<Person>(request))
-        //            .ConfigureAwait(false);
+            async Task<IViewModel> Modify(UpdateCustomerRequest request)
+            {
+                var response = await _customerRepository.Update(_mapper.Map<Customer>(request))
+                    .ConfigureAwait(false);
 
-        //        return Success(_mapper.Map<GetCustomerResponse>(response));
-        //    }
-        //}
+                return Success(_mapper.Map<CustomerViewModel>(response));
+            }
+        }
+
+        public async Task<IViewModel> BatchUpdate(List<UpdateCustomerRequest> customers)
+        {
+            return await HandleErrors(Modify, customers);
+
+            async Task<IViewModel> Modify(List<UpdateCustomerRequest> request)
+            {
+                var response = await _customerRepository.BatchUpdate(_mapper.Map<List<Customer>>(request))
+                    .ConfigureAwait(false);
+
+                return Success(_mapper.Map<List<CustomerViewModel>>(response));
+            }
+        }
+
+        public async Task<IViewModel> Delete(DeleteCustomerRequest customer)
+        {
+            return await HandleErrors(Remove, customer);
+
+            async Task<IViewModel> Remove(DeleteCustomerRequest request)
+            {
+                var response = await _customerRepository.Delete(_mapper.Map<Customer>(request))
+                    .ConfigureAwait(false);
+
+                return Success(_mapper.Map<CustomerViewModel>(response));
+            }
+        }
+
+        public async Task<IViewModel> BatchDelete(List<DeleteCustomerRequest> customers)
+        {
+            return await HandleErrors(Remove, customers);
+
+            async Task<IViewModel> Remove(List<DeleteCustomerRequest> request)
+            {
+                var response = await _customerRepository.BatchDelete(_mapper.Map<List<Customer>>(request))
+                    .ConfigureAwait(false);
+
+                return Success(_mapper.Map<List<CustomerViewModel>>(response));
+            }
+        }
     }
 }
