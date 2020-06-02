@@ -9,7 +9,7 @@ namespace SiriusStyleRdStore.Entities.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public string ProductId { get; set; }
+        public string ProductCode { get; set; }
 
         [Required]
         [StringLength(200)]
@@ -27,7 +27,7 @@ namespace SiriusStyleRdStore.Entities.Models
         [Required]
         public decimal Price { get; set; }
 
-        public byte[] Image { get; set; }
+        public string Image { get; set; }
 
         public virtual ICollection<OrderLine> OrderLines { get; set; }
     }

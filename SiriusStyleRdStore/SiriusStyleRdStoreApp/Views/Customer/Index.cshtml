@@ -1,4 +1,5 @@
 ﻿@using SiriusStyleRdStore.Entities.ViewModels
+@using SiriusStyleRdStore.Entities.ViewModels.Customer
 
 @{
     ViewData["Title"] = "Clientes";
@@ -16,6 +17,7 @@
         columns.Bound(c => c.Facebook).Width(100);
         columns.Bound(c => c.Instagram).Width(100);
         columns.Command(command => command.Destroy().Text("Eliminar")).Width(110);
+        //columns.Command(command => command.Custom("Dirección").Click("showDetails")).Width(180);
     })
     .ToolBar(toolbar => {
         toolbar.Create().Text("Agrear");

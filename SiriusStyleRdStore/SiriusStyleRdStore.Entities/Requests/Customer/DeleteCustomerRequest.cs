@@ -1,9 +1,8 @@
-﻿using SiriusStyleRdStore.Entities.ViewModels;
+﻿using SiriusStyleRdStore.Entities.ViewModels.Customer;
 
 namespace SiriusStyleRdStore.Entities.Requests.Customer
 {
-    public class DeleteCustomerRequest: CustomerViewModel
+    public class DeleteCustomerRequest : CustomerViewModel
     {
-
     }
 }

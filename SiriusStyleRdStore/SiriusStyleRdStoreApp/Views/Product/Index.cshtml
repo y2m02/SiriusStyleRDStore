@@ -1,0 +1,282 @@
+﻿@using SiriusStyleRdStore.Utility.Extensions
+@using SiriusStyleRdStore.Entities.ViewModels.Product
+@using SiriusStyleRdStore.Entities.Enums
+@using Kendo.Mvc
+@*@model SiriusStyleRdStore.Entities.Requests.Product.CreateProductRequest*@
+
+@{
+    ViewData["Title"] = "Productos";
+}
+
+<style>
+    .requiredFields {
+        font-size: 10px;
+        padding-left: 20px;
+        padding-top: 10px;
+        text-align: left;
+    }
+
+    .fieldNameAlign { text-align: left; }
+
+    .rounded-circle:hover {
+        -ms-transform: scale(1.5); /* IE 9 */
+        -webkit-transform: scale(1.5); /* Safari 3-8 */
+        transform: scale(1.5);
+    }
+
+    .custom-file-input, .rounded-circle { cursor: pointer; }
+
+    .product-photo {
+        background-position: center center;
+        background-size: 32px 35px;
+        border-radius: 50%;
+        box-shadow: inset 0 0 1px #999, inset 0 0 10px rgba(0, 0, 0, .2);
+        display: inline-block;
+        height: 32px;
+        line-height: 32px;
+        margin-right: 5px;
+        vertical-align: middle;
+        width: 32px;
+    }
+
+    .product-name {
+        display: inline-block;
+        line-height: 32px;
+        padding-left: 3px;
+        vertical-align: middle;
+    }
+
+    #imageId {
+        display: block;
+        height: 350px;
+        margin-left: auto;
+        margin-right: auto;
+        width: 350px;
+    }
+</style>
+
+<h1>Productos</h1>
+<div>
+    <div>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalProduct">Agregar</button>
+        <br/>
+        <br/>
+    </div>
+    @await Html.PartialAsync("CreatePartial")
+    <div>
+        @(Html.Kendo().Grid<ProductViewModel>()
+            .Name("Products")
+            .Columns(columns =>
+            {
+                columns.Bound(c => c.ProductCode).Hidden();
+                columns.Bound(c => c.Image).Hidden();
+                columns.Bound(c => c.Description)
+                    .ClientTemplate(@"<img src='images/products/#=Image ?? 'No image.png'#' onclick='onClick(this);' class='rounded-circle' height='80' width='80' asp-append-version='true'/><div class='product-name'>#: Description #</div>").Width(200);
+                columns.Bound(c => c.Price).Width(100);
+                columns.Bound(c => c.Size).Width(100)
+                    .Filterable(ftb => ftb
+                        .Multi(true)
+                        .CheckAll(false)
+                        .BindTo(Enum.GetValues(typeof(ProductSize)).Cast<ProductSize>()
+                            .Select(size => new
+                            {
+                                Size = size.EnumToString()
+                            }))
+                        .Messages(msg => msg
+                            .SelectedItemsFormat("{0} opciones seleccionadas"))
+                    );
+                columns.Bound(c => c.Status).Width(100)
+                    .Filterable(ftb => ftb
+                        .Multi(true)
+                        .CheckAll(false)
+                        .BindTo(Enum.GetValues(typeof(ProductStatus)).Cast<ProductStatus>()
+                            .Select(status => new
+                            {
+                                Status = status.GetDescription()
+                            }))
+                        .Messages(msg => msg
+                            .SelectedItemsFormat("{0} opciones seleccionadas"))
+                    );
+                columns.Bound(c => c.Comments).Width(100);
+                columns.Command(command => command.Custom("Editar").HtmlAttributes(new Dictionary<string, object> {["class"] = "editButton" })).Width(80);
+            })
+            .Pageable(pageable => pageable
+                .Refresh(true)
+                .PageSizes(true)
+                .ButtonCount(5)
+                .Messages(msg => msg
+                    .Empty("Sin registros")
+                    .ItemsPerPage("registros por página")
+                    .First("Ir a la primera página")
+                    .Last("Ir a la última página")
+                    .Next("Página siguiente")
+                    .Previous("Página anterior")
+                    .Refresh("Refrescar")
+                    .Display("{0} - {1} de {2} registros")
+                    .Page("Página")
+                    .MorePages("Más páginas")))
+            .Navigatable()
+            .Sortable()
+            //.Groupable()
+            .Filterable(filterable => filterable
+                .Extra(true)
+                .Operators(op =>
+                    op.ForString(str => str.Clear()
+                        .Contains("Contiene")
+                        .DoesNotContain("No contiene")
+                        .IsEqualTo("Es igual a")
+                        .IsNotEqualTo("Es diferente de")
+                        .StartsWith("Comienza con")
+                        .EndsWith("Termina con"))
+                        .ForDate(date => date.Clear()
+                            .IsEqualTo("Es igual a")
+                            .IsNotEqualTo("Es diferente de")
+                            .IsGreaterThanOrEqualTo("Mayor o igual que")
+                            .IsGreaterThan("Despúes de")
+                            .IsLessThanOrEqualTo("Hasta")
+                            .IsLessThan("Antes de"))
+                        .ForNumber(num => num.Clear()
+                            .IsEqualTo("Es igual a")
+                            .IsNotEqualTo("Es diferente de")
+                            .IsGreaterThanOrEqualTo("Mayor o igual que")
+                            .IsGreaterThan("Mayor que")
+                            .IsLessThanOrEqualTo("Menor o igual que")
+                            .IsLessThan("Menor que")))
+                .Messages(msg => msg
+                    .Info("Mostrar registros con valor que:")
+                    .And("Y")
+                    .Or("O")
+                    .Filter("Filtrar")
+                    .Clear("Limpiar")))
+            .Scrollable(s=>s.Height(700))
+            .DataSource(dataSource => dataSource
+                .Ajax()
+                .PageSize(5)
+                .ServerOperation(false)
+                //.Events(events => events.Error("error_handler"))
+                .Sort(s => s.Add("Status").Ascending())
+                .Model(model => model.Id(p => p.ProductCode))
+                .Read(read => read.Action("GetAll", "Product"))
+                .Group(group => group.Add("Status", typeof(string), ListSortDirection.Descending))
+            ))
+    </div>
+</div>
+
+@await Html.PartialAsync("ImagePartial")
+
+<script type="text/javascript">
+
+    $("#Products").delegate(".editButton",
+        "click",
+        function(e) {
+            var grid = window.$("#Products").data("kendoGrid");
+            var rowData = grid.dataItem(window.$(this).closest("tr"));
+
+            var image = rowData.Image;
+            if (image != null) {
+                var fileName = image.split("_")[1];
+                window.$(".custom-file-input").siblings(".custom-file-label").addClass("selected").html(fileName);
+            }
+
+            window.$("#txtProductCode").val(rowData.ProductCode);
+            window.$("#txtDescription").val(rowData.Description);
+            window.$("#txtPrice").val(rowData.Price);
+            window.$("#cbxSize").val(rowData.Size);
+            window.$("#txtComments").val(rowData.Comments);
+
+            window.$("#myModalProduct").modal();
+        });
+
+    $('#myModalProduct').on('hidden.bs.modal',
+        function() {
+            window.$(".custom-file-input").siblings(".custom-file-label").addClass("selected").html("Elija una imagen");
+            window.$("#txtProductCode").val('');
+            window.$("#txtDescription").val('');
+            window.$("#txtPrice").val('');
+            window.$("#cbxSize").val('');
+            window.$("#txtComments").val('');
+
+            clearErrorMessage([
+                {
+                    'key': 'txtDescription',
+                    'value': 'lblDescriptionError'
+                },
+                {
+                    'key': 'txtPrice',
+                    'value': 'lblPriceError'
+                },
+            ]);
+        });
+
+    function clearErrorMessage(parameters) {
+        for (var i = 0; i < parameters.length; i++) {
+            window.$("#" + parameters[i].key).css('borderColor', '');
+            window.$("#" + parameters[i].value).html('');
+        }
+    }
+
+    function onClick(img) {
+        var src = img.currentSrc;
+
+        window.$("#imageId").attr("src", src);
+        window.$("#myModalImage").modal();
+    }
+
+    $(".custom-file-input").on("change",
+        function() {
+            var fileName = window.$(this).val().split("\\").pop();
+            window.$(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+        });
+
+    $(function() {
+        window.$("input[id*='txtPrice']").keydown(function(event) {
+
+            if (event.shiftKey == true) {
+                event.preventDefault();
+            }
+
+            if ((event.keyCode >= 48 && event.keyCode <= 57) ||
+                (event.keyCode >= 96 && event.keyCode <= 105) ||
+                event.keyCode == 8 ||
+                event.keyCode == 9 ||
+                event.keyCode == 37 ||
+                event.keyCode == 39 ||
+                event.keyCode == 46 ||
+                event.keyCode == 190) {
+
+            } else {
+                event.preventDefault();
+            }
+
+            if (window.$(this).val().indexOf('.') !== -1 && event.keyCode == 190)
+                event.preventDefault();
+            //if a decimal has been added, disable the "."-button
+        });
+    });
+
+    function buildError(field, label) {
+        var fieldId = '#' + field;
+
+        if (window.$(fieldId).val() === "") {
+            window.$(fieldId).css('border-color', 'Red');
+            window.$('#' + label).html('Campo requerido');
+            return false;
+        }
+
+        window.$(fieldId).css('border-color', '');
+
+        return true;
+    }
+
+    function validate() {
+        var descriptionIsValid = buildError('txtDescription', 'lblDescriptionError');
+
+        var priceIsValid = buildError('txtPrice', 'lblPriceError');
+        return descriptionIsValid && priceIsValid;
+    }
+
+    function removeErrorMessage(id, messageId) {
+        window.$('#' + id).css('borderColor', '');
+        window.$('#' + messageId).html('');
+    }
+</script>

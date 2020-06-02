@@ -1,14 +1,19 @@
 ﻿using System;
 using AutoMapper;
+using Microsoft.AspNetCore.Hosting;
+using SiriusStyleRdStore.Entities.Enums;
 using SiriusStyleRdStore.Entities.Models;
 using SiriusStyleRdStore.Entities.Requests.Customer;
-using SiriusStyleRdStore.Entities.ViewModels;
+using SiriusStyleRdStore.Entities.Requests.Product;
+using SiriusStyleRdStore.Entities.ViewModels.Customer;
+using SiriusStyleRdStore.Entities.ViewModels.Product;
+using SiriusStyleRdStore.Utility.Extensions;
 
 namespace SiriusStyleRdStoreApp.Mappings
 {
     public class MappingProfile : Profile
     {
-        public MappingProfile()
+        public MappingProfile(IWebHostEnvironment webHostEnvironment)
         {
             CreateMap<Customer, CustomerViewModel>();
 
@@ -24,6 +29,26 @@ namespace SiriusStyleRdStoreApp.Mappings
             CreateMap<DeleteCustomerRequest, Customer>()
                 .ForMember(destination => destination.DeletedOn,
                     member => member.MapFrom(field => DateTime.Now));
+
+            CreateMap<Product, ProductViewModel>()
+                .ForMember(destination => destination.Status,
+                    member => member.MapFrom(field => field.Status.GetDescription()));
+
+            CreateMap<ProductRequest, CreateProductRequest>();
+            CreateMap<CreateProductRequest, Product>()
+                .ForMember(destination => destination.Size,
+                    member => member.MapFrom(field => field.Size.HasValue ? field.Size.EnumToString() : null))
+                .ForMember(destination => destination.Status,
+                    member => member.MapFrom(field => ProductStatus.Active))
+                .ForMember(destination => destination.Image,
+                    member => member.MapFrom(field => field.Image.UploadFile(webHostEnvironment)));
+
+            CreateMap<ProductRequest, UpdateProductRequest>();
+            CreateMap<UpdateProductRequest, Product>()
+                .ForMember(destination => destination.Size,
+                    member => member.MapFrom(field => field.Size.HasValue ? field.Size.EnumToString() : null))
+                .ForMember(destination => destination.Image,
+                    member => member.MapFrom(field => field.Image.UploadFile(webHostEnvironment)));
 
             //CreateMap<Category, GetCategoryResponse>();
             //CreateMap<CreateCategoryRequest, Category>();

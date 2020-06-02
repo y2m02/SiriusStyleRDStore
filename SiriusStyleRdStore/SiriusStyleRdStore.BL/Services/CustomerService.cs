@@ -6,6 +6,7 @@ using SiriusStyleRdStore.Entities.Models;
 using SiriusStyleRdStore.Entities.Requests.Customer;
 using SiriusStyleRdStore.Entities.Responses;
 using SiriusStyleRdStore.Entities.ViewModels;
+using SiriusStyleRdStore.Entities.ViewModels.Customer;
 using SiriusStyleRdStore.Repositories.Repositories;
 
 namespace SiriusStyleRdStore.BL.Services

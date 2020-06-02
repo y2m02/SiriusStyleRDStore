@@ -134,7 +134,7 @@ namespace SiriusStyleRdStore.Entities.Migrations
 
             modelBuilder.Entity("SiriusStyleRdStore.Entities.Models.Product", b =>
                 {
-                    b.Property<string>("ProductId")
+                    b.Property<string>("ProductCode")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Comments")
@@ -146,8 +146,8 @@ namespace SiriusStyleRdStore.Entities.Migrations
                         .HasColumnType("nvarchar(200)")
                         .HasMaxLength(200);
 
-                    b.Property<byte[]>("Image")
-                        .HasColumnType("varbinary(max)");
+                    b.Property<string>("Image")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
@@ -159,7 +159,7 @@ namespace SiriusStyleRdStore.Entities.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.HasKey("ProductId");
+                    b.HasKey("ProductCode");
 
                     b.ToTable("Product");
                 });

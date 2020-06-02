@@ -10,6 +10,7 @@ using SiriusStyleRdStore.BL.Services;
 using SiriusStyleRdStore.Entities.Requests.Customer;
 using SiriusStyleRdStore.Entities.Responses;
 using SiriusStyleRdStore.Entities.ViewModels;
+using SiriusStyleRdStore.Entities.ViewModels.Customer;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 

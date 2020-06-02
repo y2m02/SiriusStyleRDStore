@@ -17,9 +17,12 @@ namespace SiriusStyleRdStoreApp
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        private readonly IWebHostEnvironment _webHostEnvironment;
+
+        public Startup(IConfiguration configuration, IWebHostEnvironment webHostEnvironment)
         {
             Configuration = configuration;
+            this._webHostEnvironment = webHostEnvironment;
         }
 
         public IConfiguration Configuration { get; }
@@ -27,6 +30,8 @@ namespace SiriusStyleRdStoreApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
+            services.AddRazorPages()
+                .AddRazorRuntimeCompilation();
             // Add framework services.
             services
                 .AddControllersWithViews()
@@ -39,7 +44,7 @@ namespace SiriusStyleRdStoreApp
             // Add Kendo UI services to the services container
             services.AddKendo();
 
-            var mappingConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingProfile()); });
+            var mappingConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingProfile(_webHostEnvironment)); });
             services.AddSingleton(mappingConfig.CreateMapper());
 
             services.AddDbContext<SiriusStyleRdStoreContext>(w =>
@@ -78,8 +83,9 @@ namespace SiriusStyleRdStoreApp
             {
                 endpoints.MapControllerRoute(
                     "default",
-                    "{controller=Customer}/{action=Index}/{id?}");
+                    "{controller=Product}/{action=Index}/{id?}");
             });
+
         }
     }
 }
