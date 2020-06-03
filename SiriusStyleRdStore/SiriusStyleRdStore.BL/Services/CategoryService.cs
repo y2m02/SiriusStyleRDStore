@@ -19,6 +19,7 @@ namespace SiriusStyleRdStore.BL.Services
         Task<IViewModel> BatchUpdate(List<UpdateCategoryRequest> categories);
         Task<IViewModel> Delete(DeleteCategoryRequest category);
         Task<IViewModel> BatchDelete(List<DeleteCategoryRequest> categories);
+        Task<IViewModel> GetAllForDropDownList(int categoryId);
     }
 
     public class CategoryService : BaseService, ICategoryService
@@ -132,6 +133,17 @@ namespace SiriusStyleRdStore.BL.Services
                     .ConfigureAwait(false);
 
                 return Success(_mapper.Map<List<CategoryViewModel>>(response));
+            }
+        }
+
+        public async Task<IViewModel> GetAllForDropDownList(int categoryId)
+        {
+            return await HandleErrors(Get);
+
+            async Task<IViewModel> Get()
+            {
+                return Success(_mapper.Map<IEnumerable<CategoryViewModel>>(await _categoryRepository
+                    .GetAllForDropDownList(categoryId).ConfigureAwait(false)));
             }
         }
     }

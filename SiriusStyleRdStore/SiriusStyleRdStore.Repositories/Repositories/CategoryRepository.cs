@@ -16,6 +16,7 @@ namespace SiriusStyleRdStore.Repositories.Repositories
         Task<IEnumerable<Category>> BatchUpdate(List<Category> categories);
         Task<Category> Delete(Category category);
         Task<IEnumerable<Category>> BatchDelete(List<Category> categories);
+        Task<IEnumerable<Category>> GetAllForDropDownList(int categoryId);
     }
 
     public class CategoryRepository : BaseRepository, ICategoryRepository
@@ -27,6 +28,7 @@ namespace SiriusStyleRdStore.Repositories.Repositories
         public async Task<IEnumerable<Category>> GetAll()
         {
             return await Context.Category
+                .OrderBy(w => w.Description)
                 .Where(w => w.DeletedOn == null)
                 .ToListAsync()
                 .ConfigureAwait(false);
@@ -111,6 +113,15 @@ namespace SiriusStyleRdStore.Repositories.Repositories
             }
 
             return categories;
+        }
+
+        public async Task<IEnumerable<Category>> GetAllForDropDownList(int categoryId)
+        {
+            return await Context.Category
+                .OrderBy(w=>w.Description)
+                .Where(w => w.DeletedOn == null || w.CategoryId == categoryId)
+                .ToListAsync()
+                .ConfigureAwait(false);
         }
     }
 }

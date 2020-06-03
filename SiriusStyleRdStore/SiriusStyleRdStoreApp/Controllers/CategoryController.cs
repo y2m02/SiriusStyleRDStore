@@ -35,21 +35,22 @@ namespace SiriusStyleRdStoreApp.Controllers
         {
             var response = await _categoryService.GetAll().ConfigureAwait(false);
 
-            if (response is Success<IEnumerable<CategoryViewModel>> Categorys)
-                return Json(await Categorys.Response.ToDataSourceResultAsync(request));
+            if (response is Success<IEnumerable<CategoryViewModel>> categories)
+                return Json(await categories.Response.ToDataSourceResultAsync(request));
 
             throw new Exception();
         }
 
         [HttpPost]
         public async Task<ActionResult> BatchCreate([DataSourceRequest] DataSourceRequest request,
-            [Bind(Prefix = "models")]IEnumerable<CategoryViewModel> categories)
+            [Bind(Prefix = "models")] IEnumerable<CategoryViewModel> categories)
         {
             var results = new List<CategoryViewModel>();
 
             if (ModelState.IsValid)
             {
-                var response = await _categoryService.BatchCreate(_mapper.Map<List<CreateCategoryRequest>>(categories.ToList()));
+                var response =
+                    await _categoryService.BatchCreate(_mapper.Map<List<CreateCategoryRequest>>(categories.ToList()));
 
                 if (response is Success<CategoryViewModel> result)
                 {
@@ -62,12 +63,13 @@ namespace SiriusStyleRdStoreApp.Controllers
 
         [HttpPost]
         public async Task<ActionResult> BatchUpdate([DataSourceRequest] DataSourceRequest request,
-            [Bind(Prefix = "models")]IEnumerable<CategoryViewModel> categories)
+            [Bind(Prefix = "models")] IEnumerable<CategoryViewModel> categories)
         {
             var categoryList = categories.ToList();
             if (ModelState.IsValid)
             {
-                var _ = await _categoryService.BatchUpdate(_mapper.Map<List<UpdateCategoryRequest>>(categoryList.ToList()));
+                var _ = await _categoryService.BatchUpdate(
+                    _mapper.Map<List<UpdateCategoryRequest>>(categoryList.ToList()));
             }
 
             return Json(await categoryList.ToDataSourceResultAsync(request, ModelState));
@@ -75,16 +77,32 @@ namespace SiriusStyleRdStoreApp.Controllers
 
         [HttpPost]
         public async Task<ActionResult> BatchDelete([DataSourceRequest] DataSourceRequest request,
-            [Bind(Prefix = "models")]IEnumerable<CategoryViewModel> categories)
+            [Bind(Prefix = "models")] IEnumerable<CategoryViewModel> categories)
         {
             var categoryList = categories.ToList();
 
             if (ModelState.IsValid)
             {
-                var _ = await _categoryService.BatchDelete(_mapper.Map<List<DeleteCategoryRequest>>(categoryList.ToList()));
+                var _ = await _categoryService.BatchDelete(
+                    _mapper.Map<List<DeleteCategoryRequest>>(categoryList.ToList()));
             }
 
             return Json(await categoryList.ToDataSourceResultAsync(request, ModelState));
+        }
+
+        public async Task<JsonResult> GetAllForDropDownList(int? id)
+        {
+            var response = await _categoryService.GetAllForDropDownList(id.GetValueOrDefault()).ConfigureAwait(false);
+
+            if (response is Success<IEnumerable<CategoryViewModel>> categories)
+                return Json(categories.Response
+                    .Select(c => new 
+                        {
+                            id = c.CategoryId, 
+                            description = c.Description
+                        }));
+
+            throw new Exception();
         }
     }
 }

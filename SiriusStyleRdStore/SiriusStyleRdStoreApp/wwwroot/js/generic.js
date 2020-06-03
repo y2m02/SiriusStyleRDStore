@@ -31,6 +31,59 @@ function onClick(img) {
     window.$("#myModalImage").modal();
 }
 
-$(function () {
+$(function() {
     window.$("input").attr("autocomplete", "off");
 });
+
+
+function GetDropDownListData(elementId, id, controllerName) {
+    window.$.ajax({
+        url: "/" + controllerName + "/GetAllForDropDownList",
+        data: { id: id },
+        type: "GET",
+        content: "application/json;charset=utf-8",
+        dataType: "json",
+        success: function(result) {
+            fillDropDownList(elementId, result);
+            
+            if (id != null) {
+                window.$("#" + elementId).val(id);
+            }
+        },
+        error: function(errorMessage) {
+            alert(errorMessage.responseText);
+        }
+    });
+}
+
+function fillDropDownList(elementId, result) {
+    window.$("#" + elementId).children("option:not(:first)").remove();
+
+    window.$.each(result,
+        function(key, data) {
+            var option = new Option();
+
+            window.$(option).val(data.id);
+            window.$(option).html(data.description);
+            window.$("#" + elementId).append(option);
+        });
+}
+
+function checkIfValueExists(elementId, id) {
+    var options = window.$("#" + elementId + " option");
+
+    for (var i = 0; i < options.length; i++) {
+        if (options[i].value === id.toString()) {
+            return true;
+        }
+    }
+    return false;
+}
+
+function appendNewOption(elementId, id, description) {
+    var option = new Option();
+
+    window.$(option).val(id);
+    window.$(option).html(description);
+    window.$("#" + elementId).append(option);
+}

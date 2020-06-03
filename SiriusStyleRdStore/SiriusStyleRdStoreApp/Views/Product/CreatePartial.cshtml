@@ -1,4 +1,5 @@
 ﻿@using SiriusStyleRdStore.Entities.Enums
+@using SiriusStyleRdStore.Entities.Models
 @model SiriusStyleRdStore.Entities.Requests.Product.CreateProductRequest
 <div class="modal fade" id="myModalProduct" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -43,6 +44,7 @@
                                 </span>
                             </div>
                             @Html.DropDownListFor(model => model.CategoryId, new SelectList(ViewBag.Categories, "CategoryId", "Description"), "Elija una opción", new { @class = "form-control", Id = "cbxCategories", onchange = "removeErrorMessage('cbxCategories','lblCategoriesError')" })
+                            @*@Html.DropDownListFor(model => model.CategoryId, new SelectList(new List<Category>()), "Elija una opción", new { @class = "form-control", Id = "cbxCategories", onchange = "removeErrorMessage('cbxCategories','lblCategoriesError')" })*@
                         </div>
                         <span id="lblCategoriesError" class="text-danger"></span>
                     </div>
