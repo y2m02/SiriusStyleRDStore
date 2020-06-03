@@ -27,12 +27,14 @@ namespace SiriusStyleRdStore.Repositories.Repositories
         public async Task<IEnumerable<Product>> GetAll()
         {
             return await Context.Product
+                .Include(w=>w.Category)
                 .ToListAsync().ConfigureAwait(false);
         }
 
         public async Task<Product> GetById(string productCode)
         {
             return await Context.Product
+                .Include(w => w.Category)
                 .SingleAsync().ConfigureAwait(false);
         }
 
@@ -57,6 +59,7 @@ namespace SiriusStyleRdStore.Repositories.Repositories
             Context.Attach(product);
             var properties = new List<string>
             {
+                nameof(product.CategoryId),
                 nameof(product.Description),
                 nameof(product.Size),
                 nameof(product.Price),
@@ -79,6 +82,7 @@ namespace SiriusStyleRdStore.Repositories.Repositories
                 Context.Attach(product);
                 AddPropertiesToModify(product, new List<string>
                 {
+                    nameof(product.CategoryId),
                     nameof(product.Description),
                     nameof(product.Size),
                     nameof(product.Price),

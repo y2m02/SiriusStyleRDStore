@@ -3,8 +3,10 @@ using AutoMapper;
 using Microsoft.AspNetCore.Hosting;
 using SiriusStyleRdStore.Entities.Enums;
 using SiriusStyleRdStore.Entities.Models;
+using SiriusStyleRdStore.Entities.Requests.Category;
 using SiriusStyleRdStore.Entities.Requests.Customer;
 using SiriusStyleRdStore.Entities.Requests.Product;
+using SiriusStyleRdStore.Entities.ViewModels.Category;
 using SiriusStyleRdStore.Entities.ViewModels.Customer;
 using SiriusStyleRdStore.Entities.ViewModels.Product;
 using SiriusStyleRdStore.Utility.Extensions;
@@ -29,10 +31,28 @@ namespace SiriusStyleRdStoreApp.Mappings
             CreateMap<DeleteCustomerRequest, Customer>()
                 .ForMember(destination => destination.DeletedOn,
                     member => member.MapFrom(field => DateTime.Now));
+            
+            
+            CreateMap<Category, CategoryViewModel>();
+
+            CreateMap<CategoryViewModel, CreateCategoryRequest>();
+            CreateMap<CreateCategoryRequest, Category>();
+
+            CreateMap<CategoryViewModel, UpdateCategoryRequest>();
+            CreateMap<UpdateCategoryRequest, Category>();
+
+            CreateMap<CategoryViewModel, DeleteCategoryRequest>();
+            CreateMap<DeleteCategoryRequest, Category>()
+                .ForMember(destination => destination.DeletedOn,
+                    member => member.MapFrom(field => DateTime.Now));
+
 
             CreateMap<Product, ProductViewModel>()
                 .ForMember(destination => destination.Status,
-                    member => member.MapFrom(field => field.Status.GetDescription()));
+                    member => member.MapFrom(field => field.Status.GetDescription()))
+                .ForMember(destination => destination.Category,
+                    member => member.MapFrom(field => field.Category.Description));
+            ;
 
             CreateMap<ProductRequest, CreateProductRequest>();
             CreateMap<CreateProductRequest, Product>()

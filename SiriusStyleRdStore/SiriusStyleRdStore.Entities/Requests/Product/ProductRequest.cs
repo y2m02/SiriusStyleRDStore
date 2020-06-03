@@ -22,5 +22,8 @@ namespace SiriusStyleRdStore.Entities.Requests.Product
 
         [DisplayName("Imagen")]
         public IFormFile Image { get; set; }
+
+        [DisplayName("Categoría")]
+        public int CategoryId { get; set; }
     }
 }

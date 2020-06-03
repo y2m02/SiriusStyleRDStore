@@ -30,8 +30,8 @@
     )
     .Pageable(pageable => pageable
         .Refresh(true)
-        .PageSizes(true)
-        .ButtonCount(5)
+        .PageSizes(new[] { 20, 35, 50 })
+        //.ButtonCount(5)
         .Messages(msg => msg
             .Empty("Sin registros")
             .ItemsPerPage("registros por página")
@@ -80,7 +80,7 @@
     .DataSource(dataSource => dataSource
         .Ajax()
         .Batch(true)
-        .PageSize(5)
+        .PageSize(20)
         .ServerOperation(false)
         //.Events(events => events.Error("error_handler"))
         .Model(model => model.Id(p => p.CustomerId))

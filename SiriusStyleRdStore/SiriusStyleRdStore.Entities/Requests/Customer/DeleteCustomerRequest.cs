@@ -2,7 +2,7 @@
 
 namespace SiriusStyleRdStore.Entities.Requests.Customer
 {
-    public class DeleteCustomerRequest : CustomerViewModel
+    public class DeleteCustomerRequest 
     {
     }
 }

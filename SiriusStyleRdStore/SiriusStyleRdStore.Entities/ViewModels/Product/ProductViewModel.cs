@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using SiriusStyleRdStore.Entities.Enums;
 
 namespace SiriusStyleRdStore.Entities.ViewModels.Product
 {
@@ -26,5 +25,10 @@ namespace SiriusStyleRdStore.Entities.ViewModels.Product
 
         [DisplayName("Imagen")] 
         public string Image { get; set; }
+
+        public int CategoryId { get; set; }
+
+        [DisplayName("Categoría")]
+        public string Category { get; set; }
     }
 }

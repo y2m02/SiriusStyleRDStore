@@ -19,6 +19,26 @@ namespace SiriusStyleRdStore.Entities.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("SiriusStyleRdStore.Entities.Models.Category", b =>
+                {
+                    b.Property<int>("CategoryId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(200)")
+                        .HasMaxLength(200);
+
+                    b.HasKey("CategoryId");
+
+                    b.ToTable("Category");
+                });
+
             modelBuilder.Entity("SiriusStyleRdStore.Entities.Models.Customer", b =>
                 {
                     b.Property<int>("CustomerId")
@@ -137,6 +157,9 @@ namespace SiriusStyleRdStore.Entities.Migrations
                     b.Property<string>("ProductCode")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Comments")
                         .HasColumnType("nvarchar(1000)")
                         .HasMaxLength(1000);
@@ -160,6 +183,8 @@ namespace SiriusStyleRdStore.Entities.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("ProductCode");
+
+                    b.HasIndex("CategoryId");
 
                     b.ToTable("Product");
                 });
@@ -209,6 +234,15 @@ namespace SiriusStyleRdStore.Entities.Migrations
                     b.HasOne("SiriusStyleRdStore.Entities.Models.Product", "Product")
                         .WithMany("OrderLines")
                         .HasForeignKey("ProductCode")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("SiriusStyleRdStore.Entities.Models.Product", b =>
+                {
+                    b.HasOne("SiriusStyleRdStore.Entities.Models.Category", "Category")
+                        .WithMany("Products")
+                        .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

@@ -29,6 +29,12 @@ namespace SiriusStyleRdStore.Entities.Models
 
         public string Image { get; set; }
 
+        [Required]
+        public int CategoryId { get; set; }
+
+        [ForeignKey(nameof(CategoryId))]
+        public virtual Category Category { get; set; }
+
         public virtual ICollection<OrderLine> OrderLines { get; set; }
     }
 }

@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using SiriusStyleRdStore.BL.Services;
 using SiriusStyleRdStore.Entities.Requests.Product;
 using SiriusStyleRdStore.Entities.ViewModels;
+using SiriusStyleRdStore.Entities.ViewModels.Category;
 using SiriusStyleRdStore.Entities.ViewModels.Product;
 using SiriusStyleRdStore.Utility.Extensions;
 
@@ -16,17 +17,24 @@ namespace SiriusStyleRdStoreApp.Controllers
 {
     public class ProductController : Controller
     {
+        private readonly ICategoryService _categoryService;
         private readonly IMapper _mapper;
         private readonly IProductService _productService;
 
-        public ProductController(IProductService productService, IMapper mapper)
+        public ProductController(IProductService productService, IMapper mapper, ICategoryService categoryService)
         {
             _productService = productService;
             _mapper = mapper;
+            _categoryService = categoryService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+            if (await _categoryService.GetAll() is Success<IEnumerable<CategoryViewModel>> categories)
+            {
+                ViewBag.Categories = categories.Response;
+            }
+
             return View();
         }
 
@@ -48,7 +56,7 @@ namespace SiriusStyleRdStoreApp.Controllers
             {
                 var update = _mapper.Map<UpdateProductRequest>(product);
                 update.UpdateImage = product.Image.HasValue();
-                    
+
                 var _ = await _productService.Update(update);
 
                 return RedirectToAction(nameof(Index));

@@ -35,7 +35,7 @@ namespace SiriusStyleRdStore.Repositories.Repositories
         public async Task<Customer> GetById(int customerId)
         {
             return await Context.Customer
-                .SingleAsync(w => w.DeletedOn == null)
+                .SingleAsync(w => w.CustomerId == customerId && w.DeletedOn == null)
                 .ConfigureAwait(false);
         }
 
