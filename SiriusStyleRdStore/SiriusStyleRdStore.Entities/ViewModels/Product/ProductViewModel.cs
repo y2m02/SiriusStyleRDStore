@@ -11,6 +11,8 @@ namespace SiriusStyleRdStore.Entities.ViewModels.Product
         [Required(ErrorMessage = "El campo {0} es requerido")]
         public string Description { get; set; }
 
+        public int SizeId { get; set; }
+
         [DisplayName("Size")]
         public string Size { get; set; }
 

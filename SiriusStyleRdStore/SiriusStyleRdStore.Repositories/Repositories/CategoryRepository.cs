@@ -72,12 +72,12 @@ namespace SiriusStyleRdStore.Repositories.Repositories
 
         public async Task<IEnumerable<Category>> BatchUpdate(List<Category> categories)
         {
-            foreach (var customer in categories)
+            foreach (var category in categories)
             {
-                Context.Attach(customer);
-                AddPropertiesToModify(customer, new List<string>
+                Context.Attach(category);
+                AddPropertiesToModify(category, new List<string>
                 {
-                    nameof(customer.Description)
+                    nameof(category.Description)
                 });
 
                 await Save();
@@ -101,12 +101,12 @@ namespace SiriusStyleRdStore.Repositories.Repositories
 
         public async Task<IEnumerable<Category>> BatchDelete(List<Category> categories)
         {
-            foreach (var customer in categories)
+            foreach (var category in categories)
             {
-                Context.Attach(customer);
-                AddPropertiesToModify(customer, new List<string>
+                Context.Attach(category);
+                AddPropertiesToModify(category, new List<string>
                 {
-                    nameof(customer.DeletedOn)
+                    nameof(category.DeletedOn)
                 });
 
                 await Save();

@@ -82,7 +82,7 @@
         .Batch(true)
         .PageSize(20)
         .ServerOperation(false)
-        //.Events(events => events.Error("error_handler"))
+        .Events(events => events.RequestEnd("onRequestEnd"))
         .Model(model => model.Id(p => p.CustomerId))
         .Sort(s=>s.Add("CustomerName").Ascending())
         .Read(read=>read.Action("GetAll","Customer"))
@@ -90,3 +90,9 @@
         .Update(update=>update.Action("BatchUpdate","Customer"))
         .Destroy(delete=>delete.Action("BatchDelete","Customer"))
     ))
+
+<script>
+    function onRequestEnd(e) {
+        redirectToIndex(e, "Customer");
+    }
+</script>

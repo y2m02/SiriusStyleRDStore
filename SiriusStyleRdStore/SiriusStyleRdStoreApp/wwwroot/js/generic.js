@@ -87,3 +87,11 @@ function appendNewOption(elementId, id, description) {
     window.$(option).html(description);
     window.$("#" + elementId).append(option);
 }
+
+function redirectToIndex(e, controller) {
+    if ((e.type == "create" || e.type == "update" || e.type == "destroy") && !e.response.modelState) {
+        //var data = e.response.Data[0];
+        //window.location.href = "@(Url.Action("Index", "Size"))";
+        window.location.href = "/" + controller + "/Index";
+    }
+}

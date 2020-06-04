@@ -175,9 +175,8 @@ namespace SiriusStyleRdStore.Entities.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<string>("Size")
-                        .HasColumnType("nvarchar(5)")
-                        .HasMaxLength(5);
+                    b.Property<int?>("SizeId")
+                        .HasColumnType("int");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
@@ -186,7 +185,27 @@ namespace SiriusStyleRdStore.Entities.Migrations
 
                     b.HasIndex("CategoryId");
 
+                    b.HasIndex("SizeId");
+
                     b.ToTable("Product");
+                });
+
+            modelBuilder.Entity("SiriusStyleRdStore.Entities.Models.Size", b =>
+                {
+                    b.Property<int>("SizeId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("SizeId");
+
+                    b.ToTable("Size");
                 });
 
             modelBuilder.Entity("SiriusStyleRdStore.Entities.Models.User", b =>
@@ -245,6 +264,10 @@ namespace SiriusStyleRdStore.Entities.Migrations
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("SiriusStyleRdStore.Entities.Models.Size", "Size")
+                        .WithMany("Products")
+                        .HasForeignKey("SizeId");
                 });
 #pragma warning restore 612, 618
         }

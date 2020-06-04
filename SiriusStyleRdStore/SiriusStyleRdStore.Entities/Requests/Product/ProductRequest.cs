@@ -12,7 +12,7 @@ namespace SiriusStyleRdStore.Entities.Requests.Product
         public string Description { get; set; }
 
         [DisplayName("Size")]
-        public ProductSize? Size { get; set; }
+        public int? SizeId { get; set; }
 
         [DisplayName("Comentarios")]
         public string Comments { get; set; }

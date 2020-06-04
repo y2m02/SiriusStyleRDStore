@@ -28,6 +28,7 @@ namespace SiriusStyleRdStore.Repositories.Repositories
         {
             return await Context.Product
                 .Include(w=>w.Category)
+                .Include(w=>w.Size)
                 .ToListAsync().ConfigureAwait(false);
         }
 
@@ -35,6 +36,7 @@ namespace SiriusStyleRdStore.Repositories.Repositories
         {
             return await Context.Product
                 .Include(w => w.Category)
+                .Include(w => w.Size)
                 .SingleAsync().ConfigureAwait(false);
         }
 
@@ -61,7 +63,7 @@ namespace SiriusStyleRdStore.Repositories.Repositories
             {
                 nameof(product.CategoryId),
                 nameof(product.Description),
-                nameof(product.Size),
+                nameof(product.SizeId),
                 nameof(product.Price),
                 nameof(product.Comments)
             };
@@ -84,7 +86,7 @@ namespace SiriusStyleRdStore.Repositories.Repositories
                 {
                     nameof(product.CategoryId),
                     nameof(product.Description),
-                    nameof(product.Size),
+                    nameof(product.SizeId),
                     nameof(product.Price),
                     nameof(product.Image),
                     nameof(product.Comments)

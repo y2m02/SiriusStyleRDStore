@@ -2,6 +2,7 @@
 @using SiriusStyleRdStore.Entities.ViewModels.Product
 @using SiriusStyleRdStore.Entities.Enums
 @using Kendo.Mvc
+@using SiriusStyleRdStore.Entities.ViewModels.Size
 
 @{
     ViewData["Title"] = "Productos";
@@ -34,11 +35,11 @@
                     .Filterable(ftb => ftb
                         .Multi(true)
                         .CheckAll(false)
-                        .BindTo(Enum.GetValues(typeof(ProductSize)).Cast<ProductSize>()
-                            .Select(size => new
-                            {
-                                Size = size.EnumToString()
-                            }))
+                        .BindTo(((IEnumerable<SizeViewModel>)ViewBag.Sizes)
+                        .Select(size => new
+                        {
+                            Size = size.Description
+                        }))
                         .Messages(msg => msg
                             .SelectedItemsFormat("{0} opciones seleccionadas"))
                     );

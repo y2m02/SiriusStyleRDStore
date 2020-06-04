@@ -6,9 +6,11 @@ using SiriusStyleRdStore.Entities.Models;
 using SiriusStyleRdStore.Entities.Requests.Category;
 using SiriusStyleRdStore.Entities.Requests.Customer;
 using SiriusStyleRdStore.Entities.Requests.Product;
+using SiriusStyleRdStore.Entities.Requests.Size;
 using SiriusStyleRdStore.Entities.ViewModels.Category;
 using SiriusStyleRdStore.Entities.ViewModels.Customer;
 using SiriusStyleRdStore.Entities.ViewModels.Product;
+using SiriusStyleRdStore.Entities.ViewModels.Size;
 using SiriusStyleRdStore.Utility.Extensions;
 
 namespace SiriusStyleRdStoreApp.Mappings
@@ -45,19 +47,33 @@ namespace SiriusStyleRdStoreApp.Mappings
             CreateMap<DeleteCategoryRequest, Category>()
                 .ForMember(destination => destination.DeletedOn,
                     member => member.MapFrom(field => DateTime.Now));
+            
+
+            CreateMap<Size, SizeViewModel>();
+
+            CreateMap<SizeViewModel, CreateSizeRequest>();
+            CreateMap<CreateSizeRequest, Size>();
+
+            CreateMap<SizeViewModel, UpdateSizeRequest>();
+            CreateMap<UpdateSizeRequest, Size>();
+
+            CreateMap<SizeViewModel, DeleteSizeRequest>();
+            CreateMap<DeleteSizeRequest, Size>()
+                .ForMember(destination => destination.DeletedOn,
+                    member => member.MapFrom(field => DateTime.Now));
 
 
             CreateMap<Product, ProductViewModel>()
                 .ForMember(destination => destination.Status,
                     member => member.MapFrom(field => field.Status.GetDescription()))
                 .ForMember(destination => destination.Category,
-                    member => member.MapFrom(field => field.Category.Description));
+                    member => member.MapFrom(field => field.Category.Description))
+                .ForMember(destination => destination.Size,
+                    member => member.MapFrom(field => field.Size.Description));
             ;
 
             CreateMap<ProductRequest, CreateProductRequest>();
             CreateMap<CreateProductRequest, Product>()
-                .ForMember(destination => destination.Size,
-                    member => member.MapFrom(field => field.Size.HasValue ? field.Size.EnumToString() : null))
                 .ForMember(destination => destination.Status,
                     member => member.MapFrom(field => ProductStatus.Active))
                 .ForMember(destination => destination.Image,
@@ -65,8 +81,6 @@ namespace SiriusStyleRdStoreApp.Mappings
 
             CreateMap<ProductRequest, UpdateProductRequest>();
             CreateMap<UpdateProductRequest, Product>()
-                .ForMember(destination => destination.Size,
-                    member => member.MapFrom(field => field.Size.HasValue ? field.Size.EnumToString() : null))
                 .ForMember(destination => destination.Image,
                     member => member.MapFrom(field => field.Image.UploadFile(webHostEnvironment)));
 

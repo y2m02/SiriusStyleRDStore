@@ -3,8 +3,7 @@
     ViewData["Title"] = "Categorías";
 }
 
-
-<h1>Categorías</h1>
+    <h1>Categorías</h1>
 
 @(Html.Kendo().Grid<CategoryViewModel>
     ()
@@ -13,7 +12,7 @@
     {
         columns.Bound(c => c.CategoryId).Hidden();
         columns.Bound(c => c.Description).Width(350);
-        //columns.Command(command => command.Destroy().Text("Eliminar")).Width(90);
+        columns.Command(command => command.Destroy().Text("Eliminar")).Width(90);
     })
     .ToolBar(toolbar =>
     {
@@ -78,11 +77,18 @@
         .Batch(true)
         .PageSize(20)
         .ServerOperation(false)
-        //.Events(events => events.Error("error_handler"))
+        .Events(events => events.RequestEnd("onRequestEnd"))
         .Model(model => model.Id(p => p.CategoryId))
-        .Sort(s => s.Add("Description").Ascending())
+        //.Sort(s => s.Add("Description").Ascending())
         .Read(read => read.Action("GetAll", "Category"))
         .Create(create => create.Action("BatchCreate", "Category"))
         .Update(update => update.Action("BatchUpdate", "Category"))
         .Destroy(delete => delete.Action("BatchDelete", "Category"))
     ))
+
+
+<script>
+    function onRequestEnd(e) {
+        redirectToIndex(e, "Category");
+    }
+</script>

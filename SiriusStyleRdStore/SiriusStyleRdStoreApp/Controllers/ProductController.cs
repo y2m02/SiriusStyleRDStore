@@ -11,6 +11,7 @@ using SiriusStyleRdStore.Entities.Requests.Product;
 using SiriusStyleRdStore.Entities.ViewModels;
 using SiriusStyleRdStore.Entities.ViewModels.Category;
 using SiriusStyleRdStore.Entities.ViewModels.Product;
+using SiriusStyleRdStore.Entities.ViewModels.Size;
 using SiriusStyleRdStore.Utility.Extensions;
 
 namespace SiriusStyleRdStoreApp.Controllers
@@ -18,14 +19,19 @@ namespace SiriusStyleRdStoreApp.Controllers
     public class ProductController : Controller
     {
         private readonly ICategoryService _categoryService;
+        private readonly ISizeService _sizeService;
         private readonly IMapper _mapper;
         private readonly IProductService _productService;
 
-        public ProductController(IProductService productService, IMapper mapper, ICategoryService categoryService)
+        public ProductController(IProductService productService, 
+            IMapper mapper, 
+            ICategoryService categoryService, 
+            ISizeService sizeService)
         {
             _productService = productService;
             _mapper = mapper;
             _categoryService = categoryService;
+            _sizeService = sizeService;
         }
 
         public async Task<IActionResult> Index()
@@ -33,6 +39,11 @@ namespace SiriusStyleRdStoreApp.Controllers
             if (await _categoryService.GetAll() is Success<IEnumerable<CategoryViewModel>> categories)
             {
                 ViewBag.Categories = categories.Response;
+            }
+
+            if (await _sizeService.GetAll() is Success<IEnumerable<SizeViewModel>> sizes)
+            {
+                ViewBag.Sizes = sizes.Response;
             }
 
             return View();

@@ -17,15 +17,19 @@ function fillFields(rowData) {
         window.$(".custom-file-input").siblings(".custom-file-label").addClass("selected").html(fileName);
     }
 
-    //var categoryId = checkIfValueExists("cbxCategories", rowData.CategoryId)
-    //    ? rowData.CategoryId
-    //    : "";
+    var categoryId = checkIfValueExists("cbxCategories", rowData.CategoryId)
+        ? rowData.CategoryId
+        : "";
 
-    window.$("#cbxCategories").val(rowData.CategoryId);
+    var sizeId = checkIfValueExists("cbxSizes", rowData.SizeId)
+        ? rowData.SizeId
+        : "";
+
+    window.$("#cbxCategories").val(categoryId);
     window.$("#txtProductCode").val(rowData.ProductCode);
     window.$("#txtDescription").val(rowData.Description);
     window.$("#txtPrice").val(rowData.Price);
-    window.$("#cbxSize").val(rowData.Size);
+    window.$("#cbxSizes").val(sizeId);
     window.$("#txtComments").val(rowData.Comments);
 }
 
@@ -36,7 +40,7 @@ $("#myModalProduct").on("hidden.bs.modal",
         window.$("#txtProductCode").val("");
         window.$("#txtDescription").val("");
         window.$("#txtPrice").val("");
-        window.$("#cbxSize").val("");
+        window.$("#cbxSizes").val("");
         window.$("#txtComments").val("");
 
         clearErrorMessage([

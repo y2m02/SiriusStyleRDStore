@@ -42,7 +42,7 @@ namespace SiriusStyleRdStoreApp.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> BatchCreate([DataSourceRequest] DataSourceRequest request,
+        public async Task<IActionResult> BatchCreate([DataSourceRequest] DataSourceRequest request,
             [Bind(Prefix = "models")] IEnumerable<CategoryViewModel> categories)
         {
             var results = new List<CategoryViewModel>();
@@ -62,7 +62,7 @@ namespace SiriusStyleRdStoreApp.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> BatchUpdate([DataSourceRequest] DataSourceRequest request,
+        public async Task<IActionResult> BatchUpdate([DataSourceRequest] DataSourceRequest request,
             [Bind(Prefix = "models")] IEnumerable<CategoryViewModel> categories)
         {
             var categoryList = categories.ToList();
@@ -76,7 +76,7 @@ namespace SiriusStyleRdStoreApp.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> BatchDelete([DataSourceRequest] DataSourceRequest request,
+        public async Task<IActionResult> BatchDelete([DataSourceRequest] DataSourceRequest request,
             [Bind(Prefix = "models")] IEnumerable<CategoryViewModel> categories)
         {
             var categoryList = categories.ToList();

@@ -15,9 +15,6 @@ namespace SiriusStyleRdStore.Entities.Models
         [StringLength(200)]
         public string Description { get; set; }
 
-        [StringLength(5)]
-        public string Size { get; set; }
-
         [StringLength(1000)]
         public string Comments { get; set; }
 
@@ -32,8 +29,13 @@ namespace SiriusStyleRdStore.Entities.Models
         [Required]
         public int CategoryId { get; set; }
 
+        public int? SizeId { get; set; }
+
         [ForeignKey(nameof(CategoryId))]
         public virtual Category Category { get; set; }
+
+        [ForeignKey(nameof(SizeId))]
+        public virtual Size Size { get; set; }
 
         public virtual ICollection<OrderLine> OrderLines { get; set; }
     }
