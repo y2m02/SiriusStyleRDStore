@@ -7,6 +7,9 @@ namespace SiriusStyleRdStore.Entities.ViewModels.Product
     {
         public string ProductCode { get; set; }
 
+        [DisplayName("Orden #")]
+        public string OrderNumber { get; set; }
+
         [DisplayName("Descripción")]
         [Required(ErrorMessage = "El campo {0} es requerido")]
         public string Description { get; set; }

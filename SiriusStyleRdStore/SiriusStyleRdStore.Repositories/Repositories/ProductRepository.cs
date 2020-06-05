@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SiriusStyleRdStore.Entities.Models;
@@ -9,13 +10,17 @@ namespace SiriusStyleRdStore.Repositories.Repositories
     public interface IProductRepository
     {
         Task<IEnumerable<Product>> GetAll();
-        Task<Product> GetById(string productCode);
+        Task<Product> GetByCode(string productCode);
         Task<Product> Create(Product product);
         Task<IEnumerable<Product>> BatchCreate(List<Product> products);
         Task<Product> Update(Product product, bool updateImage);
         Task<IEnumerable<Product>> BatchUpdate(List<Product> products);
         Task<bool> CheckIfProductCodeExists(string productCode);
         Task<Product> UpdateStatus(Product product);
+        Task<Product> AssignToOrder(Product product);
+        Task<IEnumerable<Product>> AssignToOrder(List<Product> products);
+        Task<IEnumerable<Product>> GetByOrderNumber(string orderNumber);
+        Task<IEnumerable<Product>> GetAllForOrderDetails(string orderNumber);
     }
 
     public class ProductRepository : BaseRepository, IProductRepository
@@ -27,12 +32,12 @@ namespace SiriusStyleRdStore.Repositories.Repositories
         public async Task<IEnumerable<Product>> GetAll()
         {
             return await Context.Product
-                .Include(w=>w.Category)
-                .Include(w=>w.Size)
+                .Include(w => w.Category)
+                .Include(w => w.Size)
                 .ToListAsync().ConfigureAwait(false);
         }
 
-        public async Task<Product> GetById(string productCode)
+        public async Task<Product> GetByCode(string productCode)
         {
             return await Context.Product
                 .Include(w => w.Category)
@@ -118,6 +123,59 @@ namespace SiriusStyleRdStore.Repositories.Repositories
             await Save();
 
             return product;
+        }
+
+        public async Task<Product> AssignToOrder(Product product)
+        {
+            Context.Attach(product);
+            AddPropertiesToModify(product, new List<string>
+            {
+                nameof(product.OrderNumber),
+                nameof(product.Status)
+            });
+
+            await Save();
+
+            return product;
+        }
+
+        public async Task<IEnumerable<Product>> AssignToOrder(List<Product> products)
+        {
+            foreach (var product in products)
+            {
+                Context.Attach(product);
+                AddPropertiesToModify(product, new List<string>
+                {
+                    nameof(product.OrderNumber),
+                    nameof(product.Status)
+                });
+            }
+
+            await Save();
+
+            return products;
+        }
+
+        public async Task<IEnumerable<Product>> GetByOrderNumber(string orderNumber)
+        {
+            return await Context.Product
+                .Include(w => w.Category)
+                .Include(w => w.Size)
+                .Where(w => w.OrderNumber == orderNumber)
+                .ToListAsync().ConfigureAwait(false);
+        }
+
+        public async Task<IEnumerable<Product>> GetAllForOrderDetails(string orderNumber)
+        {
+            return await Context.Product
+                .Include(w => w.Category)
+                .Include(w => w.Size)
+                .Where(w =>
+                    w.OrderNumber == null
+                    || w.OrderNumber != null && w.Order.CanceledOn != null
+                    || w.OrderNumber == orderNumber
+                )
+                .ToListAsync().ConfigureAwait(false);
         }
     }
 }

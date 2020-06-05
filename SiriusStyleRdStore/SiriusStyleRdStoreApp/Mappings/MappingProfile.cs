@@ -5,10 +5,12 @@ using SiriusStyleRdStore.Entities.Enums;
 using SiriusStyleRdStore.Entities.Models;
 using SiriusStyleRdStore.Entities.Requests.Category;
 using SiriusStyleRdStore.Entities.Requests.Customer;
+using SiriusStyleRdStore.Entities.Requests.Order;
 using SiriusStyleRdStore.Entities.Requests.Product;
 using SiriusStyleRdStore.Entities.Requests.Size;
 using SiriusStyleRdStore.Entities.ViewModels.Category;
 using SiriusStyleRdStore.Entities.ViewModels.Customer;
+using SiriusStyleRdStore.Entities.ViewModels.Order;
 using SiriusStyleRdStore.Entities.ViewModels.Product;
 using SiriusStyleRdStore.Entities.ViewModels.Size;
 using SiriusStyleRdStore.Utility.Extensions;
@@ -33,8 +35,8 @@ namespace SiriusStyleRdStoreApp.Mappings
             CreateMap<DeleteCustomerRequest, Customer>()
                 .ForMember(destination => destination.DeletedOn,
                     member => member.MapFrom(field => DateTime.Now));
-            
-            
+
+
             CreateMap<Category, CategoryViewModel>();
 
             CreateMap<CategoryViewModel, CreateCategoryRequest>();
@@ -47,7 +49,7 @@ namespace SiriusStyleRdStoreApp.Mappings
             CreateMap<DeleteCategoryRequest, Category>()
                 .ForMember(destination => destination.DeletedOn,
                     member => member.MapFrom(field => DateTime.Now));
-            
+
 
             CreateMap<Size, SizeViewModel>();
 
@@ -70,12 +72,11 @@ namespace SiriusStyleRdStoreApp.Mappings
                     member => member.MapFrom(field => field.Category.Description))
                 .ForMember(destination => destination.Size,
                     member => member.MapFrom(field => field.Size.Description));
-            ;
 
             CreateMap<ProductRequest, CreateProductRequest>();
             CreateMap<CreateProductRequest, Product>()
                 .ForMember(destination => destination.Status,
-                    member => member.MapFrom(field => ProductStatus.Active))
+                    member => member.MapFrom(field => ProductStatus.Available))
                 .ForMember(destination => destination.Image,
                     member => member.MapFrom(field => field.Image.UploadFile(webHostEnvironment)));
 
@@ -83,6 +84,58 @@ namespace SiriusStyleRdStoreApp.Mappings
             CreateMap<UpdateProductRequest, Product>()
                 .ForMember(destination => destination.Image,
                     member => member.MapFrom(field => field.Image.UploadFile(webHostEnvironment)));
+
+            CreateMap<AssignProductToOrderRequest, Product>();
+
+
+            CreateMap<Order, OrderViewModel>()
+                .ForMember(destination => destination.Status,
+                    member => member.MapFrom(field => field.Status.GetDescription()))
+                .ForMember(destination => destination.Customer,
+                    member => member.MapFrom(field => field.Customer.FullName))
+                .ForMember(destination => destination.ShippingCost,
+                    member => member.MapFrom(field => field.ShippingCost.ToString("N")))
+                .ForMember(destination => destination.Discount,
+                    member => member.MapFrom(field => field.Discount.ToString("N")))
+                .ForMember(destination => destination.SubTotal,
+                    member => member.MapFrom(field => field.SubTotal.ToString("N")))
+                .ForMember(destination => destination.Total,
+                    member => member.MapFrom(field => field.Total.ToString("N")));
+
+            CreateMap<OrderRequest, CreateOrderRequest>();
+            CreateMap<CreateOrderRequest, Order>()
+                .ForMember(destination => destination.CreatedOn,
+                    member => member.MapFrom(field => DateTime.Now))
+                .ForMember(destination => destination.ShippedOn,
+                    member => member.MapFrom(field =>
+                        field.Status == OrderStatus.Shipped ? (DateTime?) DateTime.Now : null))
+                .ForMember(destination => destination.PaidOn,
+                    member => member.MapFrom(field =>
+                        field.Status == OrderStatus.Paid ? (DateTime?) DateTime.Now : null))
+                .ForMember(destination => destination.CanceledOn,
+                    member => member.MapFrom(field =>
+                        field.Status == OrderStatus.Canceled ? (DateTime?) DateTime.Now : null))
+                .ForMember(destination => destination.Discount,
+                    member => member.MapFrom(field => field.Discount.GetValueOrDefault()))
+                .ForMember(destination => destination.ShippingCost,
+                    member => member.MapFrom(field => field.ShippingCost.GetValueOrDefault()));
+            
+            CreateMap<OrderRequest, UpdateOrderRequest>();
+            CreateMap<UpdateOrderRequest, Order>()
+                .ForMember(destination => destination.ShippedOn,
+                    member => member.MapFrom(field =>
+                        field.Status == OrderStatus.Shipped ? (DateTime?) DateTime.Now : null))
+                .ForMember(destination => destination.PaidOn,
+                    member => member.MapFrom(field =>
+                        field.Status == OrderStatus.Paid ? (DateTime?) DateTime.Now : null))
+                .ForMember(destination => destination.CanceledOn,
+                    member => member.MapFrom(field =>
+                        field.Status == OrderStatus.Canceled ? (DateTime?) DateTime.Now : null))
+                .ForMember(destination => destination.Discount,
+                    member => member.MapFrom(field => field.Discount.GetValueOrDefault()))
+                .ForMember(destination => destination.ShippingCost,
+                    member => member.MapFrom(field => field.ShippingCost.GetValueOrDefault()));
+
 
             //CreateMap<Category, GetCategoryResponse>();
             //CreateMap<CreateCategoryRequest, Category>();

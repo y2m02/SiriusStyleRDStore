@@ -13,11 +13,13 @@ namespace SiriusStyleRdStore.BL.Services
     public interface IProductService
     {
         Task<IViewModel> GetAll();
-        Task<IViewModel> GetById(string productCode);
+        Task<IViewModel> GetByCode(string productCode);
         Task<IViewModel> Create(CreateProductRequest product);
         Task<IViewModel> BatchCreate(List<CreateProductRequest> products);
         Task<IViewModel> Update(UpdateProductRequest product);
         Task<IViewModel> BatchUpdate(List<UpdateProductRequest> products);
+        Task<IViewModel> GetByOrderNumber(string orderNumber);
+        Task<IViewModel> GetAllForOrderDetails(string orderNumber);
     }
 
     public class ProductService : BaseService, IProductService
@@ -42,7 +44,7 @@ namespace SiriusStyleRdStore.BL.Services
             }
         }
 
-        public async Task<IViewModel> GetById(string productCode)
+        public async Task<IViewModel> GetByCode(string productCode)
         {
             return await HandleErrors(Get, productCode);
 
@@ -50,7 +52,7 @@ namespace SiriusStyleRdStore.BL.Services
             {
                 return Success(
                     _mapper.Map<ProductViewModel>(await _productRepository
-                        .GetById(id)
+                        .GetByCode(id)
                         .ConfigureAwait(false))
                 );
             }
@@ -68,7 +70,7 @@ namespace SiriusStyleRdStore.BL.Services
                 do
                 {
                     mappedProduct.ProductCode = CodeGenerator.Generate();
-                    exists = await _productRepository.CheckIfProductCodeExists(mappedProduct.ProductCode);
+                    exists = await _productRepository.CheckIfProductCodeExists(mappedProduct.ProductCode).ConfigureAwait(false); ;
                 } while (exists);
 
                 var response = await _productRepository.Create(mappedProduct)
@@ -92,7 +94,7 @@ namespace SiriusStyleRdStore.BL.Services
                     do
                     {
                         product.ProductCode = CodeGenerator.Generate();
-                        exists = await _productRepository.CheckIfProductCodeExists(product.ProductCode);
+                        exists = await _productRepository.CheckIfProductCodeExists(product.ProductCode).ConfigureAwait(false); ;
                     } while (exists);
                 }
 
@@ -126,6 +128,28 @@ namespace SiriusStyleRdStore.BL.Services
                     .ConfigureAwait(false);
 
                 return Success(_mapper.Map<List<ProductViewModel>>(response));
+            }
+        }
+
+        public async Task<IViewModel> GetByOrderNumber(string orderNumber)
+        {
+            return await HandleErrors(Get);
+
+            async Task<IViewModel> Get()
+            {
+                return Success(_mapper.Map<IEnumerable<ProductViewModel>>(await _productRepository
+                    .GetByOrderNumber(orderNumber).ConfigureAwait(false)));
+            }
+        }
+
+        public async Task<IViewModel> GetAllForOrderDetails(string orderNumber)
+        {
+            return await HandleErrors(Get);
+
+            async Task<IViewModel> Get()
+            {
+                return Success(_mapper.Map<IEnumerable<ProductViewModel>>(await _productRepository
+                    .GetAllForOrderDetails(orderNumber).ConfigureAwait(false)));
             }
         }
     }

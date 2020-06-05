@@ -1,6 +1,5 @@
-﻿using System.ComponentModel;
-using Microsoft.AspNetCore.Http;
-using SiriusStyleRdStore.Entities.Enums;
+﻿using Microsoft.AspNetCore.Http;
+using System.ComponentModel;
 
 namespace SiriusStyleRdStore.Entities.Requests.Product
 {

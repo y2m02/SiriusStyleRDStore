@@ -31,6 +31,11 @@ namespace SiriusStyleRdStore.Entities.Models
 
         public int? SizeId { get; set; }
 
+        public string OrderNumber { get; set; }
+
+        [ForeignKey(nameof(OrderNumber))]
+        public virtual Order Order { get; set; }
+
         [ForeignKey(nameof(CategoryId))]
         public virtual Category Category { get; set; }
 
