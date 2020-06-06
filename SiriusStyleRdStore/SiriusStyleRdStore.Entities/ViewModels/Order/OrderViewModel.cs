@@ -31,16 +31,16 @@ namespace SiriusStyleRdStore.Entities.ViewModels.Order
         public string Status { get; set; }
 
         [DisplayName("Costo de envío")]
-        public string ShippingCost { get; set; }
+        public decimal ShippingCost { get; set; }
 
         [DisplayName("Descuento")]
-        public string Discount { get; set; }
+        public decimal Discount { get; set; }
 
         [DisplayName("SubTotal")]
-        public string SubTotal { get; set; }
+        public decimal SubTotal { get; set; }
 
         [DisplayName("Total")]
-        public string Total { get; set; }
+        public decimal Total { get; set; }
 
         public List<ProductViewModel> Products { get; set; }
     }

@@ -92,15 +92,7 @@ namespace SiriusStyleRdStoreApp.Mappings
                 .ForMember(destination => destination.Status,
                     member => member.MapFrom(field => field.Status.GetDescription()))
                 .ForMember(destination => destination.Customer,
-                    member => member.MapFrom(field => field.Customer.FullName))
-                .ForMember(destination => destination.ShippingCost,
-                    member => member.MapFrom(field => field.ShippingCost.ToString("N")))
-                .ForMember(destination => destination.Discount,
-                    member => member.MapFrom(field => field.Discount.ToString("N")))
-                .ForMember(destination => destination.SubTotal,
-                    member => member.MapFrom(field => field.SubTotal.ToString("N")))
-                .ForMember(destination => destination.Total,
-                    member => member.MapFrom(field => field.Total.ToString("N")));
+                    member => member.MapFrom(field => field.Customer.FullName));
 
             CreateMap<OrderRequest, CreateOrderRequest>();
             CreateMap<CreateOrderRequest, Order>()

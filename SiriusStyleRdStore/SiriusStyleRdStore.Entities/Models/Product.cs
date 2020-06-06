@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using SiriusStyleRdStore.Entities.Enums;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using SiriusStyleRdStore.Entities.Enums;
 
 namespace SiriusStyleRdStore.Entities.Models
 {
@@ -9,6 +8,7 @@ namespace SiriusStyleRdStore.Entities.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        //[StringLength(10)]
         public string ProductCode { get; set; }
 
         [Required]
@@ -31,6 +31,7 @@ namespace SiriusStyleRdStore.Entities.Models
 
         public int? SizeId { get; set; }
 
+        //[StringLength(10)]
         public string OrderNumber { get; set; }
 
         [ForeignKey(nameof(OrderNumber))]
@@ -42,6 +43,6 @@ namespace SiriusStyleRdStore.Entities.Models
         [ForeignKey(nameof(SizeId))]
         public virtual Size Size { get; set; }
 
-        public virtual ICollection<OrderLine> OrderLines { get; set; }
+        //public virtual ICollection<OrderLine> OrderLines { get; set; }
     }
 }

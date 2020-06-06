@@ -128,30 +128,6 @@ namespace SiriusStyleRdStore.Entities.Migrations
                     b.ToTable("Order");
                 });
 
-            modelBuilder.Entity("SiriusStyleRdStore.Entities.Models.OrderLine", b =>
-                {
-                    b.Property<int>("OrderLineId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("OrderNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("ProductCode")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("OrderLineId");
-
-                    b.HasIndex("OrderNumber");
-
-                    b.HasIndex("ProductCode");
-
-                    b.ToTable("OrderLine");
-                });
-
             modelBuilder.Entity("SiriusStyleRdStore.Entities.Models.Product", b =>
                 {
                     b.Property<string>("ProductCode")
@@ -172,6 +148,9 @@ namespace SiriusStyleRdStore.Entities.Migrations
                     b.Property<string>("Image")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("OrderNumber")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
@@ -184,6 +163,8 @@ namespace SiriusStyleRdStore.Entities.Migrations
                     b.HasKey("ProductCode");
 
                     b.HasIndex("CategoryId");
+
+                    b.HasIndex("OrderNumber");
 
                     b.HasIndex("SizeId");
 
@@ -242,21 +223,6 @@ namespace SiriusStyleRdStore.Entities.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("SiriusStyleRdStore.Entities.Models.OrderLine", b =>
-                {
-                    b.HasOne("SiriusStyleRdStore.Entities.Models.Order", "Order")
-                        .WithMany("OrderLines")
-                        .HasForeignKey("OrderNumber")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("SiriusStyleRdStore.Entities.Models.Product", "Product")
-                        .WithMany("OrderLines")
-                        .HasForeignKey("ProductCode")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("SiriusStyleRdStore.Entities.Models.Product", b =>
                 {
                     b.HasOne("SiriusStyleRdStore.Entities.Models.Category", "Category")
@@ -264,6 +230,10 @@ namespace SiriusStyleRdStore.Entities.Migrations
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("SiriusStyleRdStore.Entities.Models.Order", "Order")
+                        .WithMany("Products")
+                        .HasForeignKey("OrderNumber");
 
                     b.HasOne("SiriusStyleRdStore.Entities.Models.Size", "Size")
                         .WithMany("Products")

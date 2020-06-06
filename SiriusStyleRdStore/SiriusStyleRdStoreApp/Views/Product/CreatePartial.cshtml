@@ -1,18 +1,17 @@
-﻿@using SiriusStyleRdStore.Entities.Enums
-@using SiriusStyleRdStore.Entities.Models
-@model SiriusStyleRdStore.Entities.Requests.Product.CreateProductRequest
+﻿@model SiriusStyleRdStore.Entities.Requests.Product.CreateProductRequest
+
 <div class="modal fade" id="myModalProduct" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            @using (Html.BeginForm("Upsert", "Product", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            @using (Html.BeginForm("Upsert", "Product", FormMethod.Post, new {enctype = "multipart/form-data"}))
             {
                 <div class="modal-header">
-                    <h4 class="modal-title" id="myModalLabel">Agregar</h4>
+                    <h4 class="modal-title" id="myModalLabel">Crear - Editar</h4>
                 </div>
                 <div class="requiredFields">
-                    @Html.Label("", "Campos con (*) son obligatorios.", new { @class = "text-danger" })
+                    @Html.Label("", "Campos con (*) son obligatorios.", new {@class = "text-danger"})
                 </div>
-                @Html.TextBoxFor(model => model.ProductCode, new { @class = "form-control", Id = "txtProductCode", hidden = true })
+                @Html.TextBoxFor(model => model.ProductCode, new {@class = "form-control", Id = "txtProductCode", hidden = true})
                 <div class="modal-body">
                     <div class="form-group">
                         <div class="fieldNameAlign">
@@ -22,7 +21,8 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text" id="basic-addon1">
                                     <i class="fas fa-user-graduate "
-                                       aria-hidden="true"></i>
+                                       aria-hidden="true">
+                                    </i>
                                 </span>
                             </div>
                             <div class="custom-file">
@@ -34,47 +34,50 @@
                     </div>
                     <div class="form-group">
                         <div class="fieldNameAlign">
-                            @Html.LabelFor(model => model.CategoryId) @Html.Label("", "*", new { @class = "text-danger" })
+                            @Html.LabelFor(model => model.CategoryId) @Html.Label("", "*", new {@class = "text-danger"})
                         </div>
                         <div class="input-group mb-2 mr-sm-2">
                             <div class="input-group-prepend">
                                 <span class="input-group-text" id="basic-addon1">
                                     <i class="fas fa-user-graduate "
-                                       aria-hidden="true"></i>
+                                       aria-hidden="true">
+                                    </i>
                                 </span>
                             </div>
-                            @Html.DropDownListFor(model => model.CategoryId, new SelectList(ViewBag.Categories, "CategoryId", "Description"), "Elija una opción", new { @class = "form-control", Id = "cbxCategories", onchange = "removeErrorMessage('cbxCategories','lblCategoriesError')" })
+                            @Html.DropDownListFor(model => model.CategoryId, new SelectList(ViewBag.Categories, "CategoryId", "Description"), "Elija una opción", new {@class = "form-control", Id = "cbxCategories", onchange = "removeErrorMessage('cbxCategories','lblCategoriesError')"})
                             @*@Html.DropDownListFor(model => model.CategoryId, new SelectList(new List<Category>()), "Elija una opción", new { @class = "form-control", Id = "cbxCategories", onchange = "removeErrorMessage('cbxCategories','lblCategoriesError')" })*@
                         </div>
                         <span id="lblCategoriesError" class="text-danger"></span>
                     </div>
                     <div class="form-group">
                         <div class="fieldNameAlign">
-                            @Html.LabelFor(model => model.Description) @Html.Label("", "*", new { @class = "text-danger" })
+                            @Html.LabelFor(model => model.Description) @Html.Label("", "*", new {@class = "text-danger"})
                         </div>
                         <div class="input-group mb-2 mr-sm-2">
                             <div class="input-group-prepend">
                                 <span class="input-group-text" id="basic-addon1">
                                     <i class="fas fa-user-graduate "
-                                       aria-hidden="true"></i>
+                                       aria-hidden="true">
+                                    </i>
                                 </span>
                             </div>
-                            @Html.TextBoxFor(model => model.Description, new { @class = "form-control", Id = "txtDescription", oninput = "removeErrorMessage('txtDescription','lblDescriptionError')" })
+                            @Html.TextBoxFor(model => model.Description, new {@class = "form-control", Id = "txtDescription", oninput = "removeErrorMessage('txtDescription','lblDescriptionError')"})
                         </div>
                         <span id="lblDescriptionError" class="text-danger"></span>
                     </div>
                     <div class="form-group">
                         <div class="fieldNameAlign">
-                            @Html.LabelFor(model => model.Price) @Html.Label("", "*", new { @class = "text-danger" })
+                            @Html.LabelFor(model => model.Price) @Html.Label("", "*", new {@class = "text-danger"})
                         </div>
                         <div class="input-group mb-2 mr-sm-2">
                             <div class="input-group-prepend">
                                 <span class="input-group-text" id="basic-addon1">
                                     <i class="fas fa-user-graduate "
-                                       aria-hidden="true"></i>
+                                       aria-hidden="true">
+                                    </i>
                                 </span>
                             </div>
-                            @Html.TextBoxFor(model => model.Price, new { @class = "form-control", Id = "txtPrice", oninput = "removeErrorMessage('txtPrice','lblPriceError')" })
+                            @Html.TextBoxFor(model => model.Price, new {@class = "form-control", Id = "txtPrice", oninput = "removeErrorMessage('txtPrice','lblPriceError')"})
                         </div>
                         <span id="lblPriceError" class="text-danger"></span>
                     </div>
@@ -86,10 +89,11 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text" id="basic-addon1">
                                     <i class="fas fa-user-graduate "
-                                       aria-hidden="true"></i>
+                                       aria-hidden="true">
+                                    </i>
                                 </span>
                             </div>
-                            @Html.DropDownListFor(model => model.SizeId, new SelectList(ViewBag.Sizes, "SizeId", "Description"), "Elija una opción", new { @class = "form-control", Id = "cbxSizes", onchange = "removeErrorMessage('cbxSizes','lblSizesError')" })
+                            @Html.DropDownListFor(model => model.SizeId, new SelectList(ViewBag.Sizes, "SizeId", "Description"), "Elija una opción", new {@class = "form-control", Id = "cbxSizes", onchange = "removeErrorMessage('cbxSizes','lblSizesError')"})
                         </div>
                         <span id="lblSizesError" class="text-danger"></span>
                     </div>
@@ -101,16 +105,17 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text" id="basic-addon1">
                                     <i class="fas fa-user-graduate "
-                                       aria-hidden="true"></i>
+                                       aria-hidden="true">
+                                    </i>
                                 </span>
                             </div>
-                            @Html.TextBoxFor(model => model.Comments, new { @class = "form-control", Id = "txtComments"})
+                            @Html.TextBoxFor(model => model.Comments, new {@class = "form-control", Id = "txtComments"})
                         </div>
                         <span id="lblCommentsError" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <input type="submit" value="Guardar" class="btn btn-primary" id="btnUpsert" onclick="return validate();" />
+                    <input type="submit" value="Guardar" class="btn btn-primary" id="btnUpsert" onclick="return validate();"/>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
                 </div>
             }

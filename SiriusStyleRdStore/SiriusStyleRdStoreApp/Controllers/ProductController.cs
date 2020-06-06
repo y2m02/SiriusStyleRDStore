@@ -7,9 +7,11 @@ using Kendo.Mvc.Extensions;
 using Kendo.Mvc.UI;
 using Microsoft.AspNetCore.Mvc;
 using SiriusStyleRdStore.BL.Services;
+using SiriusStyleRdStore.Entities.Enums;
 using SiriusStyleRdStore.Entities.Requests.Product;
 using SiriusStyleRdStore.Entities.ViewModels;
 using SiriusStyleRdStore.Entities.ViewModels.Category;
+using SiriusStyleRdStore.Entities.ViewModels.Item;
 using SiriusStyleRdStore.Entities.ViewModels.Product;
 using SiriusStyleRdStore.Entities.ViewModels.Size;
 using SiriusStyleRdStore.Utility.Extensions;
@@ -18,38 +20,37 @@ namespace SiriusStyleRdStoreApp.Controllers
 {
     public class ProductController : Controller
     {
-        private readonly ICategoryService _categoryService;
-        private readonly ISizeService _sizeService;
         private readonly IMapper _mapper;
         private readonly IProductService _productService;
+        private readonly IItemService _itemService;
 
         public ProductController(IProductService productService, 
-            IMapper mapper, 
-            ICategoryService categoryService, 
-            ISizeService sizeService)
+            IMapper mapper, IItemService itemService)
         {
             _productService = productService;
             _mapper = mapper;
-            _categoryService = categoryService;
-            _sizeService = sizeService;
+            _itemService = itemService;
         }
 
         public async Task<IActionResult> Index()
         {
-            if (await _categoryService.GetAll() is Success<IEnumerable<CategoryViewModel>> categories)
+            var itemResponse = await _itemService
+                .Get(new List<ItemType>
             {
-                ViewBag.Categories = categories.Response;
-            }
+                ItemType.Category,
+                ItemType.Size
+            });
 
-            if (await _sizeService.GetAll() is Success<IEnumerable<SizeViewModel>> sizes)
+            if (itemResponse is Success<ItemViewModel> item)
             {
-                ViewBag.Sizes = sizes.Response;
+                ViewBag.Categories = item.Response.Categories;
+                ViewBag.Sizes = item.Response.Sizes;
             }
 
             return View();
         }
 
-        public async Task<JsonResult> GetAll([DataSourceRequest] DataSourceRequest request)
+        public async Task<IActionResult> GetAll([DataSourceRequest] DataSourceRequest request)
         {
             var response = await _productService.GetAll().ConfigureAwait(false);
 
@@ -79,7 +80,7 @@ namespace SiriusStyleRdStoreApp.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> BatchCreate([DataSourceRequest] DataSourceRequest request,
+        public async Task<IActionResult> BatchCreate([DataSourceRequest] DataSourceRequest request,
             [Bind(Prefix = "models")] IEnumerable<ProductViewModel> products)
         {
             var results = new List<ProductViewModel>();
@@ -96,7 +97,7 @@ namespace SiriusStyleRdStoreApp.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> BatchUpdate([DataSourceRequest] DataSourceRequest request,
+        public async Task<IActionResult> BatchUpdate([DataSourceRequest] DataSourceRequest request,
             [Bind(Prefix = "models")] IEnumerable<ProductViewModel> products)
         {
             var productList = products.ToList();
@@ -107,6 +108,26 @@ namespace SiriusStyleRdStoreApp.Controllers
             }
 
             return Json(await productList.ToDataSourceResultAsync(request, ModelState));
+        }
+
+        public async Task<IActionResult> GetByOrderNumber(string orderNumber, [DataSourceRequest] DataSourceRequest request)
+        {
+            var response = await _productService.GetByOrderNumber(orderNumber).ConfigureAwait(false);
+
+            if (response is Success<IEnumerable<ProductViewModel>> products)
+                return Json(await products.Response.ToDataSourceResultAsync(request));
+
+            throw new Exception();
+        }
+
+        public async Task<ActionResult> GetAllForOrderDetails([DataSourceRequest] DataSourceRequest request, string orderNumber)
+        {
+            var response = await _productService.GetAllForOrderDetails(orderNumber).ConfigureAwait(false);
+
+            if (response is Success<IEnumerable<ProductViewModel>> products)
+                return Json(await products.Response.ToDataSourceResultAsync(request));
+
+            throw new Exception();
         }
     }
 }
