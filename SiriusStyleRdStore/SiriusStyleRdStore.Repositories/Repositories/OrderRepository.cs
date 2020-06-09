@@ -57,7 +57,6 @@ namespace SiriusStyleRdStore.Repositories.Repositories
                 nameof(order.CustomerId),
                 nameof(order.ShippedOn),
                 nameof(order.PaidOn),
-                nameof(order.CanceledOn),
                 nameof(order.ShippingCost),
                 nameof(order.Discount),
                 nameof(order.SubTotal),

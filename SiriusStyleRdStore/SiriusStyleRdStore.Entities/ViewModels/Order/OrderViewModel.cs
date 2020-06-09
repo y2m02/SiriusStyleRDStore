@@ -19,22 +19,19 @@ namespace SiriusStyleRdStore.Entities.ViewModels.Order
         public DateTime CreatedOn { get; set; }
 
         [DisplayName("Pagada")]
-        public DateTime? PaidOn { get; set; }
+        public string PaidOn { get; set; }
 
         [DisplayName("Enviada")]
-        public DateTime? ShippedOn { get; set; }
-
-        [DisplayName("Cancelada")]
-        public DateTime? CanceledOn { get; set; }
+        public string ShippedOn { get; set; }
 
         [DisplayName("Estado")]
         public string Status { get; set; }
 
         [DisplayName("Costo de envío")]
-        public decimal ShippingCost { get; set; }
+        public string ShippingCost { get; set; }
 
         [DisplayName("Descuento")]
-        public decimal Discount { get; set; }
+        public string Discount { get; set; }
 
         [DisplayName("SubTotal")]
         public decimal SubTotal { get; set; }

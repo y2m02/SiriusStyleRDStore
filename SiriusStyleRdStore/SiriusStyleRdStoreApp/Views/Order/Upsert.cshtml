@@ -136,7 +136,7 @@
         .Resizable(c => c.Columns(true))
         .Pageable(pageable => pageable
             .Refresh(true)
-            .PageSizes(new[] {10, 15, 20})
+            .PageSizes(new[] {100, 300, 500})
             .Messages(msg => msg
                 .Empty("Sin registros")
                 .ItemsPerPage("registros por página")
@@ -185,7 +185,7 @@
         .Events(ev => ev.Change("onChange"))
         .DataSource(dataSource => dataSource
             .Ajax()
-            .PageSize(10)
+            .PageSize(100)
             .ServerOperation(false)
             .Model(model => model.Id(p => p.ProductCode))
             .Read(read => read.Action("GetAllForOrderDetails", "Product", new {orderNumber = Model.OrderNumber}))

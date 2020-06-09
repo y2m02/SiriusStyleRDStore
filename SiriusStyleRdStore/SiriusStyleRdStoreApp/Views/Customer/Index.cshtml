@@ -1,6 +1,5 @@
-﻿@using SiriusStyleRdStore.Entities.ViewModels
-@using SiriusStyleRdStore.Entities.ViewModels.Customer
-
+﻿@using SiriusStyleRdStore.Entities.ViewModels.Customer
+@using SiriusStyleRdStore.Utility.Extensions
 @{
     ViewData["Title"] = "Clientes";
 }
@@ -10,16 +9,21 @@
 
 @(Html.Kendo().Grid<CustomerViewModel>()
     .Name("Customers")
-    .Columns(columns => {
+    .Columns(columns =>
+    {
         columns.Bound(c => c.CustomerId).Hidden();
         columns.Bound(c => c.FullName).Width(140);
-        columns.Bound(c => c.PhoneNumber).Width(140);
+        columns.Bound(c => c.PhoneNumber).Width(98);
+        columns.Bound(c => c.City).Width(100);
+        columns.Bound(c => c.Sector).Width(100);
+        columns.Bound(c => c.Address).Width(100);
         columns.Bound(c => c.Facebook).Width(100);
         columns.Bound(c => c.Instagram).Width(100);
         columns.Command(command => command.Destroy().Text("Eliminar")).Width(110);
-        //columns.Command(command => command.Custom("Dirección").Click("showDetails")).Width(180);
     })
-    .ToolBar(toolbar => {
+    .Resizable(r=>r.Columns(true))
+    .ToolBar(toolbar =>
+    {
         toolbar.Create().Text("Agrear");
         toolbar.Save()
             .SaveText("Guardar cambios")
@@ -30,7 +34,7 @@
     )
     .Pageable(pageable => pageable
         .Refresh(true)
-        .PageSizes(new[] { 20, 35, 50 })
+        .PageSizes(new[] {20, 35, 50})
         //.ButtonCount(5)
         .Messages(msg => msg
             .Empty("Sin registros")
@@ -45,37 +49,36 @@
             .MorePages("Más páginas")))
     .Navigatable()
     .Sortable()
-    //.Groupable()
     .Filterable(filterable => filterable
-              .Extra(true)
-              .Operators(op =>
-                  op.ForString(str => str.Clear()
-                      .Contains("Contiene")
-                      .DoesNotContain("No contiene")
-                      .IsEqualTo("Es igual a")
-                      .IsNotEqualTo("Es diferente de")
-                      .StartsWith("Comienza con")
-                      .EndsWith("Termina con"))
-                      .ForDate(date => date.Clear()
-                          .IsEqualTo("Es igual a")
-                          .IsNotEqualTo("Es diferente de")
-                          .IsGreaterThanOrEqualTo("Mayor o igual que")
-                          .IsGreaterThan("Despúes de")
-                          .IsLessThanOrEqualTo("Hasta")
-                          .IsLessThan("Antes de"))
-                      .ForNumber(num => num.Clear()
-                          .IsEqualTo("Es igual a")
-                          .IsNotEqualTo("Es diferente de")
-                          .IsGreaterThanOrEqualTo("Mayor o igual que")
-                          .IsGreaterThan("Mayor que")
-                          .IsLessThanOrEqualTo("Menor o igual que")
-                          .IsLessThan("Menor que")))
-              .Messages(msg => msg
-                  .Info("Mostrar registros con valor que:")
-                  .And("Y")
-                  .Or("O")
-                  .Filter("Filtrar")
-                  .Clear("Limpiar")))
+        .Extra(true)
+        .Operators(op =>
+            op.ForString(str => str.Clear()
+                .Contains("Contiene")
+                .DoesNotContain("No contiene")
+                .IsEqualTo("Es igual a")
+                .IsNotEqualTo("Es diferente de")
+                .StartsWith("Comienza con")
+                .EndsWith("Termina con"))
+                .ForDate(date => date.Clear()
+                    .IsEqualTo("Es igual a")
+                    .IsNotEqualTo("Es diferente de")
+                    .IsGreaterThanOrEqualTo("Mayor o igual que")
+                    .IsGreaterThan("Despúes de")
+                    .IsLessThanOrEqualTo("Hasta")
+                    .IsLessThan("Antes de"))
+                .ForNumber(num => num.Clear()
+                    .IsEqualTo("Es igual a")
+                    .IsNotEqualTo("Es diferente de")
+                    .IsGreaterThanOrEqualTo("Mayor o igual que")
+                    .IsGreaterThan("Mayor que")
+                    .IsLessThanOrEqualTo("Menor o igual que")
+                    .IsLessThan("Menor que")))
+        .Messages(msg => msg
+            .Info("Mostrar registros con valor que:")
+            .And("Y")
+            .Or("O")
+            .Filter("Filtrar")
+            .Clear("Limpiar")))
     .Scrollable()
     .DataSource(dataSource => dataSource
         .Ajax()
@@ -84,11 +87,11 @@
         .ServerOperation(false)
         .Events(events => events.RequestEnd("onRequestEnd"))
         .Model(model => model.Id(p => p.CustomerId))
-        .Sort(s=>s.Add("CustomerName").Ascending())
-        .Read(read=>read.Action("GetAll","Customer"))
-        .Create(create=>create.Action("BatchCreate","Customer"))
-        .Update(update=>update.Action("BatchUpdate","Customer"))
-        .Destroy(delete=>delete.Action("BatchDelete","Customer"))
+        .Sort(s => s.Add("CustomerName").Ascending())
+        .Read(read => read.Action("GetAll", "Customer"))
+        .Create(create => create.Action("BatchCreate", "Customer"))
+        .Update(update => update.Action("BatchUpdate", "Customer"))
+        .Destroy(delete => delete.Action("BatchDelete", "Customer"))
     ))
 
 <script>

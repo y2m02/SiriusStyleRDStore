@@ -23,8 +23,6 @@ namespace SiriusStyleRdStore.Entities.Models
 
         public DateTime? ShippedOn { get; set; }
 
-        public DateTime? CanceledOn { get; set; }
-
         [Required]
         public OrderStatus Status { get; set; }
 

@@ -178,7 +178,6 @@ namespace SiriusStyleRdStore.Repositories.Repositories
                 .Include(w => w.Size)
                 .Where(w =>
                     w.OrderNumber == null
-                    || w.OrderNumber != null && w.Order.CanceledOn != null
                     || w.OrderNumber == orderNumber
                 )
                 .ToListAsync()

@@ -93,6 +93,14 @@ namespace SiriusStyleRdStoreApp.Mappings
             CreateMap<Order, OrderViewModel>()
                 .ForMember(destination => destination.Status,
                     member => member.MapFrom(field => field.Status.GetDescription()))
+                .ForMember(destination => destination.ShippingCost,
+                    member => member.MapFrom(field => field.ShippingCost.ToNumericFormat(2)))
+                .ForMember(destination => destination.Discount,
+                    member => member.MapFrom(field => field.Discount.ToNumericFormat(2)))
+                .ForMember(destination => destination.ShippedOn,
+                    member => member.MapFrom(field => field.ShippedOn.ToFormattedString(DateFormat.ddMMyyyy)))
+                .ForMember(destination => destination.PaidOn,
+                    member => member.MapFrom(field => field.PaidOn.ToFormattedString(DateFormat.ddMMyyyy)))
                 .ForMember(destination => destination.Customer,
                     member => member.MapFrom(field => field.Customer.FullName));
 
@@ -129,10 +137,8 @@ namespace SiriusStyleRdStoreApp.Mappings
                     member => member.MapFrom(field => field.ShippingCost.GetValueOrDefault()));
 
             CreateMap<OrderRequest, CancelOrderRequest>();
-            CreateMap<CancelOrderRequest, Order>()
-                .ForMember(destination => destination.CanceledOn,
-                    member => member.MapFrom(field => DateTime.Now));
-            
+            CreateMap<CancelOrderRequest, Order>();
+
             //CreateMap<Category, GetCategoryResponse>();
             //CreateMap<CreateCategoryRequest, Category>();
             //CreateMap<UpdateCategoryRequest, Category>();
