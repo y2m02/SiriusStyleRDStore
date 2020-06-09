@@ -77,7 +77,7 @@
                                     </i>
                                 </span>
                             </div>
-                            @Html.TextBoxFor(model => model.Price, new {@class = "form-control", Id = "txtPrice", oninput = "removeErrorMessage('txtPrice','lblPriceError')"})
+                            @Html.TextBoxFor(model => model.Price, new {@class = "form-control numericField", Id = "txtPrice", oninput = "removeErrorMessage('txtPrice','lblPriceError')"})
                         </div>
                         <span id="lblPriceError" class="text-danger"></span>
                     </div>

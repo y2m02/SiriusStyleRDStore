@@ -65,31 +65,6 @@ $(".custom-file-input").on("change",
         window.$(this).siblings(".custom-file-label").addClass("selected").html(fileName);
     });
 
-$(function () {
-    window.$("input[id*='txtPrice']").keydown(function (event) {
-
-        if (event.shiftKey == true) {
-            event.preventDefault();
-        }
-
-        if (!((event.keyCode >= 48 && event.keyCode <= 57) ||
-            (event.keyCode >= 96 && event.keyCode <= 105) ||
-            event.keyCode == 8 ||
-            event.keyCode == 9 ||
-            event.keyCode == 37 ||
-            event.keyCode == 39 ||
-            event.keyCode == 46 ||
-            event.keyCode == 190)) {
-
-            event.preventDefault();
-        }
-
-        if (window.$(this).val().indexOf(".") !== -1 && event.keyCode == 190)
-            event.preventDefault();
-        //if a decimal has been added, disable the "."-button
-    });
-});
-
 function validate() {
     var categoryIdIsValid = buildError("cbxCategories", "lblCategoriesError");
     var descriptionIsValid = buildError("txtDescription", "lblDescriptionError");
@@ -99,6 +74,30 @@ function validate() {
         && descriptionIsValid
         && priceIsValid;
 }
+//$(function () {
+//    window.$("input[id*='txtPrice']").keydown(function (event) {
+
+//        if (event.shiftKey == true) {
+//            event.preventDefault();
+//        }
+
+//        if (!((event.keyCode >= 48 && event.keyCode <= 57) ||
+//            (event.keyCode >= 96 && event.keyCode <= 105) ||
+//            event.keyCode == 8 ||
+//            event.keyCode == 9 ||
+//            event.keyCode == 37 ||
+//            event.keyCode == 39 ||
+//            event.keyCode == 46 ||
+//            event.keyCode == 190)) {
+
+//            event.preventDefault();
+//        }
+
+//        if (window.$(this).val().indexOf(".") !== -1 && event.keyCode == 190)
+//            event.preventDefault();
+//        //if a decimal has been added, disable the "."-button
+//    });
+//});
 
 //$("#openModal").on("click",
 //    function () {

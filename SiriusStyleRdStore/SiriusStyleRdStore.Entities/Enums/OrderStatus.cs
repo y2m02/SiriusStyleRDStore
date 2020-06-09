@@ -4,9 +4,6 @@ namespace SiriusStyleRdStore.Entities.Enums
 {
     public enum OrderStatus
     {
-        [Description("Cancelada")]
-        Canceled = 0,
-
         [Description("Pendiente")]
         Pending = 1,
 

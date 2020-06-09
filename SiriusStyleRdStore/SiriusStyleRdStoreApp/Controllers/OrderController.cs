@@ -8,10 +8,11 @@ using Microsoft.AspNetCore.Mvc;
 using SiriusStyleRdStore.BL.Services;
 using SiriusStyleRdStore.Entities.Enums;
 using SiriusStyleRdStore.Entities.Requests.Order;
+using SiriusStyleRdStore.Entities.Requests.Product;
 using SiriusStyleRdStore.Entities.ViewModels;
 using SiriusStyleRdStore.Entities.ViewModels.Item;
 using SiriusStyleRdStore.Entities.ViewModels.Order;
-using SiriusStyleRdStore.Entities.ViewModels.Product;
+using SiriusStyleRdStore.Utility.Extensions;
 
 namespace SiriusStyleRdStoreApp.Controllers
 {
@@ -45,7 +46,7 @@ namespace SiriusStyleRdStoreApp.Controllers
             return View();
         }
 
-        public async Task<IActionResult> Create()
+        public async Task<IActionResult> Upsert(string orderNumber = null)
         {
             var itemResponse = await _itemService
                 .Get(new List<ItemType>
@@ -60,7 +61,29 @@ namespace SiriusStyleRdStoreApp.Controllers
                 ViewBag.Sizes = item.Response.Sizes;
             }
 
-            return View();
+            if (orderNumber.HasValue())
+            {
+                var response = await _orderService.GetByNumber(orderNumber).ConfigureAwait(false);
+
+                if (response is Success<OrderViewModel> order)
+                    return View(_mapper.Map<OrderRequest>(order.Response));
+                //return View(new OrderRequest
+                //    {
+                //        OrderNumber = order.Response.OrderNumber,
+                //        CustomerId = order.Response.CustomerId,
+                //        ShippingCost = order.Response.ShippingCost,
+                //        Discount = order.Response.Discount,
+                //        Total = order.Response.Total,
+                //        SubTotal = order.Response.SubTotal,
+                //        Status = order.Response.Status?.GetEnumValueFromDescription<OrderStatus>()
+                //                 ?? OrderStatus.Pending
+                //    });
+            }
+
+            return View(new OrderRequest
+            {
+                Status = OrderStatus.Pending
+            });
         }
 
         public async Task<JsonResult> GetAll([DataSourceRequest] DataSourceRequest request)
@@ -103,5 +126,23 @@ namespace SiriusStyleRdStoreApp.Controllers
             //return RedirectToAction(nameof(Index));
             return Json(order);
         }
+
+        [HttpPost]
+        public async Task<JsonResult> Cancel(OrderRequest order)
+        {
+            var response = await _orderService.Cancel(_mapper.Map<CancelOrderRequest>(order));
+
+            return Json(order);
+        }
+
+        //[HttpPost]
+        //public async Task<IActionResult> Cancel([DataSourceRequest] DataSourceRequest request,
+        //    OrderViewModel order)
+        //{
+        //        var _ = await _orderService.Cancel(
+        //            _mapper.Map<CancelOrderRequest>(order));
+
+        //    return Json(await new[] { order }.ToDataSourceResultAsync(request, ModelState));
+        //}
     }
 }

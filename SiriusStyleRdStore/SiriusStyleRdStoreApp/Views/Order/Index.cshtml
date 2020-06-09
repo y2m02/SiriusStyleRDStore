@@ -1,7 +1,5 @@
 ﻿@using SiriusStyleRdStore.Utility.Extensions
 @using SiriusStyleRdStore.Entities.ViewModels.Order
-@using SiriusStyleRdStore.Entities.ViewModels.Product
-@using SiriusStyleRdStore.Entities.ViewModels.Size
 @using SiriusStyleRdStore.Entities.Enums
 @{
     ViewData["Title"] = "Órdenes";
@@ -12,8 +10,8 @@
 <div>
     <div>
         <button id="createOrder" type="button" class="btn btn-primary">Crear</button>
-        <br />
-        <br />
+        <br/>
+        <br/>
     </div>
 
     <div>
@@ -39,7 +37,7 @@
                 columns.Bound(c => c.SubTotal).Width(100).Groupable(false).Format("{0:n2}");
                 columns.Bound(c => c.Total).Width(100).Groupable(false).Format("{0:n2}");
                 columns.Command(command => command.Custom("Editar").HtmlAttributes(new Dictionary<string, object> {["class"] = "editButton"})).Width(80);
-                //columns.Command(command => command.Custom("Más detalles").HtmlAttributes(new Dictionary<string, object> {["class"] = "moreDetailButton" })).Width(80);
+                columns.Command(command => command.Custom("Cancelar").Click("showConfirm")).Width(80);
             }
             )
             .Resizable(c => c.Columns(true))
@@ -120,6 +118,23 @@
 @await Html.PartialAsync("../Product/ImagePartial")
 @await Html.PartialAsync("OrderDetail")
 
+<div class="modal fade" id="myCancellationModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">Confirmación</h4>
+            </div>
+            <div class="modal-body">
+                Está a punto de cancelar esa order
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="btnConfirm" onclick="cancelOrder()">Confirmar</button>
+                <button type="button" id="btnCancel" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     function dataBound() {
         this.expandRow(this.tbody.find("tr.k-master-row").first());
@@ -127,8 +142,51 @@
 
     $("#createOrder").on("click",
         function() {
-            window.location = "@Url.Action("Create", "Order")";
+            window.location = "/Order/Upsert";
         });
-</script>
 
-@*<script src="~/js/product.js"></script>*@
+    $("#Orders").delegate(".editButton",
+        "click",
+        function() {
+            var grid = window.$("#Orders").data("kendoGrid");
+            var rowData = grid.dataItem(window.$(this).closest("tr"));
+
+            window.location = "/Order/Upsert?orderNumber=" + rowData.OrderNumber;
+
+        });
+
+    var orderNumber;
+    function showConfirm(e) {
+        e.preventDefault();
+                
+        var dataItem = this.dataItem(window.$(e.currentTarget).closest("tr"));
+        orderNumber = dataItem.OrderNumber;
+
+        window.$("#myCancellationModal").modal();
+    }
+
+    function cancelOrder() {
+        document.body.style.cursor = 'wait';
+
+        var order = {
+            "OrderNumber": orderNumber,
+
+        }
+
+        window.$.ajax({
+            url: "/Order/Cancel",
+            data: order,
+            type: "POST",
+            content: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                document.body.style.cursor = 'default';
+                location.reload();
+            },
+            error: function (errorMessage) {
+                document.body.style.cursor = 'default';
+                alert(errorMessage.responseText);
+            }
+        });
+    }
+</script>

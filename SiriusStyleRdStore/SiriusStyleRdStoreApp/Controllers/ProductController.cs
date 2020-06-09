@@ -120,7 +120,7 @@ namespace SiriusStyleRdStoreApp.Controllers
             throw new Exception();
         }
 
-        public async Task<ActionResult> GetAllForOrderDetails([DataSourceRequest] DataSourceRequest request, string orderNumber)
+        public async Task<ActionResult> GetAllForOrderDetails(string orderNumber, [DataSourceRequest] DataSourceRequest request)
         {
             var response = await _productService.GetAllForOrderDetails(orderNumber).ConfigureAwait(false);
 

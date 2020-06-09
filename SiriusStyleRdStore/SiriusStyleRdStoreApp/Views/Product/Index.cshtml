@@ -113,7 +113,7 @@
                 .Sort(s => s.Add("Status").Ascending())
                 .Model(model => model.Id(p => p.ProductCode))
                 .Read(read => read.Action("GetAll", "Product"))
-                .Group(group => group.Add("Status", typeof(string), ListSortDirection.Descending))
+                .Group(group => group.Add("Status", typeof(string), ListSortDirection.Ascending))
             ))
     </div>
 </div>
@@ -121,8 +121,3 @@
 @await Html.PartialAsync("ImagePartial")
 
 <script src="~/js/product.js"></script>
-
-@*<script type="text/javascript">
-
-
-</script>*@

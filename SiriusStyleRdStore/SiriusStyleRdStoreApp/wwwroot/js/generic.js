@@ -95,3 +95,48 @@ function redirectToIndex(e, controller) {
         window.location.href = "/" + controller + "/Index";
     }
 }
+
+$(function () {
+    window.$('.numericField').bind('paste', function (e) {
+        e.preventDefault(); 
+    });
+
+    //$('.numericField').bind('copy paste cut', function (e) {
+    //    e.preventDefault(); 
+    //});
+
+    window.$("input[class*='numericField']").keydown(function (event) {
+
+        if (event.shiftKey == true) {
+            event.preventDefault();
+        }
+
+        if (!((event.keyCode >= 48 && event.keyCode <= 57) ||
+            (event.keyCode >= 96 && event.keyCode <= 105) ||
+            event.keyCode == 8 ||
+            event.keyCode == 9 ||
+            event.keyCode == 37 ||
+            event.keyCode == 39 ||
+            event.keyCode == 46 ||
+            event.keyCode == 190)) {
+
+            event.preventDefault();
+        }
+
+        if (window.$(this).val().indexOf(".") !== -1 && event.keyCode == 190)
+            event.preventDefault();
+        //if a decimal has been added, disable the "."-button
+    });
+
+    window.$(".numericField").focus(function () {
+        var $this = window.$(this);
+        $this.select();
+
+        // Work around Chrome's little problem
+        $this.mouseup(function () {
+            // Prevent further mouseup intervention
+            $this.unbind("mouseup");
+            return false;
+        });
+    });
+});

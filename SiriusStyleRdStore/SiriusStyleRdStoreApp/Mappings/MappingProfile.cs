@@ -87,12 +87,18 @@ namespace SiriusStyleRdStoreApp.Mappings
 
             CreateMap<AssignProductToOrderRequest, Product>();
 
+            CreateMap<CancelOrderRequest, Order>();
+
 
             CreateMap<Order, OrderViewModel>()
                 .ForMember(destination => destination.Status,
                     member => member.MapFrom(field => field.Status.GetDescription()))
                 .ForMember(destination => destination.Customer,
                     member => member.MapFrom(field => field.Customer.FullName));
+
+            CreateMap<OrderViewModel, OrderRequest>()
+                .ForMember(destination => destination.Status,
+                    member => member.MapFrom(field => field.Status.GetEnumValueFromDescription<OrderStatus>()));
 
             CreateMap<OrderRequest, CreateOrderRequest>();
             CreateMap<CreateOrderRequest, Order>()
@@ -104,9 +110,6 @@ namespace SiriusStyleRdStoreApp.Mappings
                 .ForMember(destination => destination.PaidOn,
                     member => member.MapFrom(field =>
                         field.Status == OrderStatus.Paid ? (DateTime?) DateTime.Now : null))
-                .ForMember(destination => destination.CanceledOn,
-                    member => member.MapFrom(field =>
-                        field.Status == OrderStatus.Canceled ? (DateTime?) DateTime.Now : null))
                 .ForMember(destination => destination.Discount,
                     member => member.MapFrom(field => field.Discount.GetValueOrDefault()))
                 .ForMember(destination => destination.ShippingCost,
@@ -120,15 +123,16 @@ namespace SiriusStyleRdStoreApp.Mappings
                 .ForMember(destination => destination.PaidOn,
                     member => member.MapFrom(field =>
                         field.Status == OrderStatus.Paid ? (DateTime?) DateTime.Now : null))
-                .ForMember(destination => destination.CanceledOn,
-                    member => member.MapFrom(field =>
-                        field.Status == OrderStatus.Canceled ? (DateTime?) DateTime.Now : null))
                 .ForMember(destination => destination.Discount,
                     member => member.MapFrom(field => field.Discount.GetValueOrDefault()))
                 .ForMember(destination => destination.ShippingCost,
                     member => member.MapFrom(field => field.ShippingCost.GetValueOrDefault()));
 
-
+            CreateMap<OrderRequest, CancelOrderRequest>();
+            CreateMap<CancelOrderRequest, Order>()
+                .ForMember(destination => destination.CanceledOn,
+                    member => member.MapFrom(field => DateTime.Now));
+            
             //CreateMap<Category, GetCategoryResponse>();
             //CreateMap<CreateCategoryRequest, Category>();
             //CreateMap<UpdateCategoryRequest, Category>();

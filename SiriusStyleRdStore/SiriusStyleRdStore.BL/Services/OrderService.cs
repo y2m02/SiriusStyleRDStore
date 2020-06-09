@@ -20,6 +20,7 @@ namespace SiriusStyleRdStore.BL.Services
         Task<IViewModel> GetByNumber(string orderNumber);
         Task<IViewModel> Create(CreateOrderRequest order);
         Task<IViewModel> Update(UpdateOrderRequest order);
+        Task<IViewModel> Cancel(CancelOrderRequest order);
     }
 
     public class OrderService : BaseService, IOrderService
@@ -72,12 +73,14 @@ namespace SiriusStyleRdStore.BL.Services
                 do
                 {
                     mappedOrder.OrderNumber = CodeGenerator.Generate();
-                    exists = await _orderRepository.CheckIfOrderNumberExists(mappedOrder.OrderNumber).ConfigureAwait(false);
+                    exists = await _orderRepository.CheckIfOrderNumberExists(mappedOrder.OrderNumber)
+                        .ConfigureAwait(false);
                 } while (exists);
 
                 var orderResponse = await _orderRepository.Create(mappedOrder)
                     .ConfigureAwait(false);
 
+                request.OrderNumber = orderResponse.OrderNumber;
                 var productResponse = await _productRepository
                     .AssignToOrder(_mapper.Map<List<Product>>(GetProducts(request)))
                     .ConfigureAwait(false);
@@ -101,6 +104,22 @@ namespace SiriusStyleRdStore.BL.Services
             }
         }
 
+        public async Task<IViewModel> Cancel(CancelOrderRequest order)
+        {
+            return await HandleErrors(Modify, order);
+
+            async Task<IViewModel> Modify(CancelOrderRequest request)
+            {
+                var products = await _productRepository.SetAsAvailable(request.OrderNumber)
+                    .ConfigureAwait(false);
+
+                var response = await _orderRepository.Cancel(_mapper.Map<Order>(request))
+                    .ConfigureAwait(false);
+
+                return Success(_mapper.Map<OrderViewModel>(response));
+            }
+        }
+
         private async Task UpdateOrderDetails(OrderRequest request)
         {
             var products = await _productRepository.GetByOrderNumber(request.OrderNumber)
@@ -108,45 +127,28 @@ namespace SiriusStyleRdStore.BL.Services
 
             var productsToAssignOrder = GetProducts(request).ToList();
 
-            foreach (var product in products)
-            {
-                if (!request.ProductCodes.Contains(product.ProductCode))
+                foreach (var product in products)
                 {
-                    productsToAssignOrder.Add(new AssignProductToOrderRequest
+                    if (!request.ProductCodes.Contains(product.ProductCode))
                     {
-                        ProductCode = product.ProductCode,
-                        OrderNumber = null,
-                        Status = ProductStatus.Available,
-                    });
+                        productsToAssignOrder.Add(new AssignProductToOrderRequest
+                        {
+                            ProductCode = product.ProductCode,
+                            OrderNumber = null,
+                            Status = ProductStatus.Available
+                        });
+                    }
                 }
-            }
 
             var productResponse = await _productRepository
                 .AssignToOrder(_mapper.Map<List<Product>>(productsToAssignOrder))
                 .ConfigureAwait(false);
-            
-            //productsToAssignOrder.AddRange(products.Select(product =>
-            //{
-            //    var orderNumber = request.ProductCodes.Contains(product.ProductCode)
-            //        ? request.OrderNumber
-            //        : null;
-
-            //    return new AssignProductToOrderRequest
-            //    {
-            //        ProductCode = product.ProductCode,
-            //        OrderNumber = orderNumber,
-            //        Status = ProductStatus.Active,
-            //    };
-            //}));
         }
 
         private static ProductStatus GetProductStatus(OrderStatus status)
         {
             switch (status)
             {
-                case OrderStatus.Canceled:
-                    return ProductStatus.Available;
-
                 case OrderStatus.Pending:
                     return ProductStatus.Ordered;
 

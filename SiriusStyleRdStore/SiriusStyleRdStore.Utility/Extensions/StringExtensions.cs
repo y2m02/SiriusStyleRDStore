@@ -1,4 +1,7 @@
-﻿namespace SiriusStyleRdStore.Utility.Extensions
+﻿using System;
+using System.ComponentModel;
+
+namespace SiriusStyleRdStore.Utility.Extensions
 {
     public static class StringExtensions
     {
@@ -22,6 +25,33 @@
             return int.TryParse(str, out var n)
                 ? n
                 : 0;
+        }
+        
+        public static T ToEnum<T>(this string str)
+        {
+            return (T) Enum.Parse(typeof(T), str);
+        }
+
+        public static T GetEnumValueFromDescription<T>(this string str)
+        {
+            var type = typeof(T);
+            if (!type.IsEnum) throw new InvalidOperationException();
+            foreach (var field in type.GetFields())
+            {
+                if (Attribute.GetCustomAttribute(field,
+                    typeof(DescriptionAttribute)) is DescriptionAttribute attribute)
+                {
+                    if (attribute.Description == str)
+                        return (T)field.GetValue(null);
+                }
+                else
+                {
+                    if (field.Name == str)
+                        return (T)field.GetValue(null);
+                }
+            }
+            throw new ArgumentException("Not found.", nameof(str));
+            // or return default(T);
         }
     }
 }

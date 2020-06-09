@@ -160,6 +160,9 @@ namespace SiriusStyleRdStore.Entities.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
+                    b.Property<bool?>("WasCanceled")
+                        .HasColumnType("bit");
+
                     b.HasKey("ProductCode");
 
                     b.HasIndex("CategoryId");

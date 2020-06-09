@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using SiriusStyleRdStore.Entities.Enums;
+﻿using SiriusStyleRdStore.Entities.Enums;
 
 namespace SiriusStyleRdStore.Entities.Requests.Product
 {

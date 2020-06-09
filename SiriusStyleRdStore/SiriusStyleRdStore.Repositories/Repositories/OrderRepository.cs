@@ -13,6 +13,7 @@ namespace SiriusStyleRdStore.Repositories.Repositories
         Task<Order> Create(Order order);
         Task<Order> Update(Order order);
         Task<bool> CheckIfOrderNumberExists(string orderNumber);
+        Task<Order> Cancel(Order order);
     }
 
     public class OrderRepository : BaseRepository, IOrderRepository
@@ -64,17 +65,26 @@ namespace SiriusStyleRdStore.Repositories.Repositories
             });
 
             await Save();
-
             return order;
         }
 
         public async Task<bool> CheckIfOrderNumberExists(string orderNumber)
         {
             var order = await Context.Order
+                .AsNoTracking()
                 .SingleOrDefaultAsync(w => w.OrderNumber == orderNumber)
                 .ConfigureAwait(false);
 
             return order.HasValue();
+        }
+
+        public async Task<Order> Cancel(Order order)
+        {
+            Context.Attach(order);
+            Context.Entry(order).State = EntityState.Deleted;
+
+            await Save();
+            return order;
         }
     }
 }

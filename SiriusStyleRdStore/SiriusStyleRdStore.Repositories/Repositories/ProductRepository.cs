@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using SiriusStyleRdStore.Entities.Enums;
 using SiriusStyleRdStore.Entities.Models;
 using SiriusStyleRdStore.Utility.Extensions;
 
@@ -21,6 +22,7 @@ namespace SiriusStyleRdStore.Repositories.Repositories
         Task<IEnumerable<Product>> AssignToOrder(List<Product> products);
         Task<IEnumerable<Product>> GetByOrderNumber(string orderNumber);
         Task<IEnumerable<Product>> GetAllForOrderDetails(string orderNumber);
+        Task<IEnumerable<Product>> SetAsAvailable(string orderNumber);
     }
 
     public class ProductRepository : BaseRepository, IProductRepository
@@ -34,7 +36,8 @@ namespace SiriusStyleRdStore.Repositories.Repositories
             return await Context.Product
                 .Include(w => w.Category)
                 .Include(w => w.Size)
-                .ToListAsync().ConfigureAwait(false);
+                .ToListAsync()
+                .ConfigureAwait(false);
         }
 
         public async Task<Product> GetByCode(string productCode)
@@ -42,7 +45,8 @@ namespace SiriusStyleRdStore.Repositories.Repositories
             return await Context.Product
                 .Include(w => w.Category)
                 .Include(w => w.Size)
-                .SingleAsync().ConfigureAwait(false);
+                .SingleAsync()
+                .ConfigureAwait(false);
         }
 
         public async Task<Product> Create(Product product)
@@ -131,7 +135,7 @@ namespace SiriusStyleRdStore.Repositories.Repositories
             AddPropertiesToModify(product, new List<string>
             {
                 nameof(product.OrderNumber),
-                nameof(product.Status)
+                nameof(product.Status),
             });
 
             await Save();
@@ -147,7 +151,7 @@ namespace SiriusStyleRdStore.Repositories.Repositories
                 AddPropertiesToModify(product, new List<string>
                 {
                     nameof(product.OrderNumber),
-                    nameof(product.Status)
+                    nameof(product.Status),
                 });
             }
 
@@ -162,7 +166,9 @@ namespace SiriusStyleRdStore.Repositories.Repositories
                 .Include(w => w.Category)
                 .Include(w => w.Size)
                 .Where(w => w.OrderNumber == orderNumber)
-                .ToListAsync().ConfigureAwait(false);
+                .AsNoTracking()
+                .ToListAsync()
+                .ConfigureAwait(false);
         }
 
         public async Task<IEnumerable<Product>> GetAllForOrderDetails(string orderNumber)
@@ -175,7 +181,30 @@ namespace SiriusStyleRdStore.Repositories.Repositories
                     || w.OrderNumber != null && w.Order.CanceledOn != null
                     || w.OrderNumber == orderNumber
                 )
-                .ToListAsync().ConfigureAwait(false);
+                .ToListAsync()
+                .ConfigureAwait(false);
+        }
+
+        public async Task<IEnumerable<Product>> SetAsAvailable(string orderNumber)
+        {
+            var products = (await GetByOrderNumber(orderNumber).ConfigureAwait(false)).ToList();
+
+            foreach (var product in products)
+            {
+                product.Status = ProductStatus.Available;
+                product.OrderNumber = null;
+
+                Context.Attach(product);
+                AddPropertiesToModify(product, new List<string>
+                {
+                    nameof(product.OrderNumber),
+                    nameof(product.Status),
+                });
+            }
+
+            await Save();
+
+            return products;
         }
     }
 }
