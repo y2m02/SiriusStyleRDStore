@@ -86,5 +86,27 @@ namespace SiriusStyleRdStoreApp.Controllers
 
             return Json(await customerList.ToDataSourceResultAsync(request, ModelState));
         }
+
+        public async Task<JsonResult> AjaxCreate(CustomerRequest customer)
+        {
+            _ = await _customerService.Create(_mapper.Map<CreateCustomerRequest>(customer));
+
+            return Json(customer);
+        }
+
+        public async Task<JsonResult> GetAllForDropDownList(int? id)
+        {
+            var response = await _customerService.GetAllForDropDownList(id.GetValueOrDefault()).ConfigureAwait(false);
+
+            if (response is Success<IEnumerable<CustomerViewModel>> customers)
+                return Json(customers.Response
+                    .Select(c => new
+                    {
+                        id = c.CustomerId,
+                        description = c.FullName
+                    }));
+
+            throw new Exception();
+        }
     }
 }

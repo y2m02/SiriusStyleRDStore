@@ -2,6 +2,6 @@
 {
     public class UpdateCustomerRequest : CustomerRequest
     {
-        public int CustomerId { get; set; }
+
     }
 }

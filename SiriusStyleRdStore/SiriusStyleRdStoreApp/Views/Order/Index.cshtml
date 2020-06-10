@@ -8,12 +8,22 @@
 
 <h1>Órdenes</h1>
 <div>
-    <div>
+    <div >
         <button id="createOrder" type="button" class="btn btn-primary">Crear</button>
-        <br/>
-        <br/>
     </div>
-
+    <br/>
+    <br/>
+    <div class="row" style="text-align: center">
+        <div class="col-sm-4">
+            @Html.Label("", "Total pendientes: RD$", new {style = "font-weight:bold"})@Html.Label("", "0.00", new {style = "font-weight:bold", id = "lblTotalPending"})
+        </div>
+        <div class="col-sm-4">
+            @Html.Label("", "Total pagas y enviadas: RD$", new {style = "font-weight:bold"})@Html.Label("", "0.00", new {style = "font-weight:bold", id = "lblTotalPaidAndShipped"})
+        </div>
+        <div class="col-sm-4">
+            @Html.Label("", "Gran total: RD$", new {style = "font-weight:bold"})@Html.Label("", "0.00", new {style = "font-weight:bold", id = "lblGrantTotal"})
+        </div>
+    </div>
     <div>
         @(Html.Kendo().Grid<OrderViewModel>()
             .Name("Orders")
@@ -99,7 +109,7 @@
                 )
             )
             //.Scrollable(s => s.Height(700))
-            .HtmlAttributes(new {style = "width:1000px;"})
+            .HtmlAttributes(new {style = "width:100%;"})
             .ClientDetailTemplateId("productTemplate")
             .DataSource(dataSource => dataSource
                 .Ajax()
@@ -135,57 +145,4 @@
     </div>
 </div>
 
-<script>
-    function dataBound() {
-        this.expandRow(this.tbody.find("tr.k-master-row").first());
-    }
-
-    $("#createOrder").on("click",
-        function() {
-            window.location = "/Order/Upsert";
-        });
-
-    $("#Orders").delegate(".editButton",
-        "click",
-        function() {
-            var grid = window.$("#Orders").data("kendoGrid");
-            var rowData = grid.dataItem(window.$(this).closest("tr"));
-
-            window.location = "/Order/Upsert?orderNumber=" + rowData.OrderNumber;
-
-        });
-
-    var orderNumber;
-    function showConfirm(e) {
-        e.preventDefault();
-                
-        var dataItem = this.dataItem(window.$(e.currentTarget).closest("tr"));
-        orderNumber = dataItem.OrderNumber;
-
-        window.$("#myCancellationModal").modal();
-    }
-
-    function cancelOrder() {
-        document.body.style.cursor = 'wait';
-
-        var order = {
-            "OrderNumber": orderNumber
-        }
-
-        window.$.ajax({
-            url: "/Order/Cancel",
-            data: order,
-            type: "POST",
-            content: "application/json;charset=utf-8",
-            dataType: "json",
-            success: function (result) {
-                document.body.style.cursor = 'default';
-                location.reload();
-            },
-            error: function (errorMessage) {
-                document.body.style.cursor = 'default';
-                alert(errorMessage.responseText);
-            }
-        });
-    }
-</script>
+<script src="~/js/order.js"></script>

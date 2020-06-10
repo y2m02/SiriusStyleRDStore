@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using SiriusStyleRdStore.Entities.Models;
 using SiriusStyleRdStore.Entities.Requests.Customer;
-using SiriusStyleRdStore.Entities.Responses;
 using SiriusStyleRdStore.Entities.ViewModels;
 using SiriusStyleRdStore.Entities.ViewModels.Customer;
 using SiriusStyleRdStore.Repositories.Repositories;
@@ -22,6 +20,7 @@ namespace SiriusStyleRdStore.BL.Services
         Task<IViewModel> BatchUpdate(List<UpdateCustomerRequest> customers);
         Task<IViewModel> Delete(DeleteCustomerRequest customer);
         Task<IViewModel> BatchDelete(List<DeleteCustomerRequest> customers);
+        Task<IViewModel> GetAllForDropDownList(int customerId);
     }
 
     public class CustomerService : BaseService, ICustomerService
@@ -136,6 +135,17 @@ namespace SiriusStyleRdStore.BL.Services
                     .ConfigureAwait(false);
 
                 return Success(_mapper.Map<List<CustomerViewModel>>(response));
+            }
+        }
+
+        public async Task<IViewModel> GetAllForDropDownList(int customerId)
+        {
+            return await HandleErrors(Get);
+
+            async Task<IViewModel> Get()
+            {
+                return Success(_mapper.Map<IEnumerable<CustomerViewModel>>(await _customerRepository
+                    .GetAllForDropDownList(customerId).ConfigureAwait(false)));
             }
         }
     }

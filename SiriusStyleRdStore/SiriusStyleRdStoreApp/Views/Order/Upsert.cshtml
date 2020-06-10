@@ -2,7 +2,7 @@
 @using SiriusStyleRdStore.Entities.Enums
 @using SiriusStyleRdStore.Entities.ViewModels.Product
 @using SiriusStyleRdStore.Entities.ViewModels.Size
-@model SiriusStyleRdStore.Entities.Requests.Order.OrderRequest
+@model SiriusStyleRdStore.Entities.ViewModels.OrderCustomerViewModel
 @{
     ViewData["Title"] = "Crear - Editar órden";
 
@@ -20,6 +20,12 @@
         );
 }
 <style>
+    #btnCustomerModal:active {
+        -ms-transform: scale(-1); /* IE 9 */
+        -webkit-transform: scale(-1); /* Safari 3-8 */
+        transform: scale(-1);
+    }
+
     .form-control {
         border-radius: 0.25rem !important;
     }
@@ -28,9 +34,9 @@
 
 <div>
     <div class="row">
-        @Html.TextBoxFor(model => model.OrderNumber, new { id = "txtOrderNumber", hidden = true })
+        @Html.TextBoxFor(model => model.Order.OrderNumber, new { id = "txtOrderNumber", hidden = true })
         <div class="col-md-6 col-sm-6 col-xs-12">
-            @Html.LabelFor(model => model.CustomerId)
+            @Html.LabelFor(model => model.Order.CustomerId)
             <div class="input-group mb-2 mr-sm-2">
                 <div class="input-group-prepend">
                     <span class="input-group-text" id="basic-addon1">
@@ -39,8 +45,8 @@
                         </i>
                     </span>
                 </div>
-                @Html.DropDownListFor(model => model.CustomerId, new SelectList(ViewBag.Customers, "CustomerId", "FullName"), "Elija una opción", new { @class = "form-control", Id = "cbxCustomers", onchange = "removeErrorMessage('cbxCustomers','lblCustomersError')" })
-                <span style="background-color: #3276b1; border-radius: 5px; padding-left: 12px;" class="btn input-group-addon" @*data-toggle="modal" data-target="#myModalSpecialty" onclick="clearTextBoxSpecialty()"*@>
+                @Html.DropDownListFor(model => model.Order.CustomerId, new SelectList(ViewBag.Customers, "CustomerId", "FullName"), "Elija una opción", new { @class = "form-control", Id = "cbxCustomers", onchange = "removeErrorMessage('cbxCustomers','lblCustomersError')" })
+                <span style="background-color: #3276b1; border-radius: 5px; padding-left: 12px;" id="btnCustomerModal" class="btn btn-primary" data-toggle="modal" data-target="#myModalCustomer">
                     <i style="color: white;" class="fas fa-plus-circle"
                        aria-hidden="true">
                     </i>
@@ -49,7 +55,7 @@
             <span id="lblCustomersError" class="text-danger"></span>
         </div>
         <div class="col-md-6 col-sm-6 col-xs-12">
-            @Html.LabelFor(model => model.Status)
+            @Html.LabelFor(model => model.Order.Status)
             <div class="input-group mb-2 mr-sm-2">
                 <div class="input-group-prepend">
                     <span class="input-group-text" id="basic-addon1">
@@ -58,12 +64,12 @@
                         </i>
                     </span>
                 </div>
-                @Html.DropDownListFor(model => model.Status, statusSelectList, "Elija una opción", new { @class = "form-control", Id = "cbxStatus", onchange = "removeErrorMessage('cbxStatus','lblStatusError')" })
+                @Html.DropDownListFor(model => model.Order.Status, statusSelectList, "Elija una opción", new { @class = "form-control", Id = "cbxStatus", onchange = "removeErrorMessage('cbxStatus','lblStatusError')" })
             </div>
             <span id="lblStatusError" class="text-danger"></span>
         </div>
         <div class="col-md-6 col-sm-6 col-xs-12">
-            @Html.LabelFor(model => model.ShippingCost)
+            @Html.LabelFor(model => model.Order.ShippingCost)
             <div class="input-group mb-2 mr-sm-2">
                 <div class="input-group-prepend">
                     <span class="input-group-text" id="basic-addon1">
@@ -72,12 +78,12 @@
                         </i>
                     </span>
                 </div>
-                @Html.TextBoxFor(model => model.ShippingCost, new { @class = "form-control numericField", Id = "txtShippingCost" @*, oninput = "removeErrorMessage('txtShippingCost','lblShippingCostError')"*@})
+                @Html.TextBoxFor(model => model.Order.ShippingCost, new { @class = "form-control numericField", Id = "txtShippingCost" @*, oninput = "removeErrorMessage('txtShippingCost','lblShippingCostError')"*@})
                 <span id="lblShippingCostError" class="text-danger"></span>
             </div>
         </div>
         <div class="col-md-6 col-sm-6 col-xs-12">
-            @Html.LabelFor(model => model.Discount)
+            @Html.LabelFor(model => model.Order.Discount)
             <div class="input-group mb-2 mr-sm-2">
                 <div class="input-group-prepend">
                     <span class="input-group-text" id="basic-addon1">
@@ -86,7 +92,7 @@
                         </i>
                     </span>
                 </div>
-                @Html.TextBoxFor(model => model.Discount, new { @class = "form-control numericField", Id = "txtDiscount" @*, oninput = "removeErrorMessage('txtDiscount','lblDiscountError')"*@})
+                @Html.TextBoxFor(model => model.Order.Discount, new { @class = "form-control numericField", Id = "txtDiscount" @*, oninput = "removeErrorMessage('txtDiscount','lblDiscountError')"*@})
                 <span id="lblDiscountError" class="text-danger"></span>
             </div>
         </div>
@@ -188,7 +194,7 @@
             .PageSize(100)
             .ServerOperation(false)
             .Model(model => model.Id(p => p.ProductCode))
-            .Read(read => read.Action("GetAllForOrderDetails", "Product", new {orderNumber = Model.OrderNumber}))
+            .Read(read => read.Action("GetAllForOrderDetails", "Product", new {orderNumber = Model.Order.OrderNumber}))
         )
         )
 </div>
@@ -209,182 +215,6 @@
 </div>
 
 @await Html.PartialAsync("../Product/ImagePartial")
+@await Html.PartialAsync("../Customer/CreatePartial")
 
-<script>
-    var grid;
-    var shippingCost = 0;
-    var discount = 0;
-    var subTotal = 0;
-    var totalPrices = 0;
-
-    var checkedValues = [];
-
-    $(function () {
-        initializeShippingAndDiscount();
-
-        var isFirstLoad = true;
-        var isEmptyFilter = false;
-        var codes = [];
-        grid = window.$("#Products").data("kendoGrid");
-
-        grid.bind("dataBound",
-            function () {
-                var rows = grid.items();
-
-                if (grid.dataSource.filter() && rows.length == 0) {
-                    codes = checkedValues;
-                    isEmptyFilter = true;
-                    return;
-                }
-                if (isEmptyFilter) {
-                    window.$(rows).each(function (e) {
-                        var row = this;
-                        var dataItem = grid.dataItem(row);
-
-                        if (codes.includes(dataItem.ProductCode)) {
-                            grid.select(row);
-                        }
-                    });
-
-                    isEmptyFilter = false;
-                    return;
-                }
-
-                if (isFirstLoad) {
-                    window.$(rows).each(function (e) {
-                        var row = this;
-                        var dataItem = grid.dataItem(row);
-
-                        if (dataItem.OrderNumber != null) {
-                            grid.select(row);
-                        }
-                    });
-
-                    isFirstLoad = false;
-                }
-            });
-    });
-
-    function isValid() {
-        var customerIdIsValid = buildError("cbxCustomers", "lblCustomersError");
-        var statusIsValid = buildError("cbxStatus", "lblStatusError");
-        var productsIsValid = true;
-
-        var total = totalPrices - discount;
-
-        if (total <= 0) {
-            window.$("#lblProductsError").html("Debe seleccionar al menos un artículo");
-            productsIsValid = false;
-        }
-
-        return customerIdIsValid
-            && statusIsValid
-            && productsIsValid;
-    }
-
-    function saveOrder() {
-        document.body.style.cursor = 'wait';
-        if (!isValid()) {
-            document.body.style.cursor = 'default';
-            return false;
-        }
-        var order = buildOrder();
-
-        window.$.ajax({
-            url: "/Order/AjaxUpsert",
-            data: order,
-            type: "POST",
-            content: "application/json;charset=utf-8",
-            dataType: "json",
-            success: function (result) {
-                document.body.style.cursor = 'default';
-                window.location = "/";
-            },
-            error: function (errorMessage) {
-                document.body.style.cursor = 'default';
-                alert(errorMessage.responseText);
-            }
-        });
-
-        return true;
-    }
-
-    function buildOrder() {
-        var orderNumber = window.$("#txtOrderNumber").val();
-        var customerId = window.$("#cbxCustomers").val();
-        var status = window.$("#cbxStatus").val();
-        var subTotal = window.$("#lblSubTotal").html();
-        var total = window.$("#lblTotal").html();
-        var productCodes = checkedValues;
-
-        return {
-            "OrderNumber": orderNumber,
-            "CustomerId": customerId,
-            "Status": status,
-            "ShippingCost": shippingCost,
-            "Discount": discount,
-            "SubTotal": subTotal,
-            "Total": total,
-            "ProductCodes": productCodes
-        };
-    }
-
-    function onChange(e) {
-        window.$("#lblProductsError").html("");
-        checkedValues = getCheckedValues(grid);
-
-        var rows = e.sender.select();
-        totalPrices = 0;
-        rows.each(function () {
-            var dataItem = grid.dataItem(this);
-            totalPrices += parseFloat(dataItem.Price);
-        });
-
-        subTotal = totalPrices + shippingCost;
-        var total = totalPrices - discount;
-        setTotalAndSubTotal(subTotal, total);
-    }
-
-    function getCheckedValues(grid) {
-        var selectedRows = grid.selectedKeyNames();
-
-        var productCodes = [];
-        for (var i = 0; i < selectedRows.length; i++) {
-            productCodes.push(selectedRows[i]);
-        }
-
-        return productCodes;
-    }
-
-    window.$("#txtShippingCost, #txtDiscount").on("input",
-        function () {
-            initializeShippingAndDiscount();
-
-            setTotalAndSubTotal(totalPrices + shippingCost, totalPrices - discount);
-        });
-
-
-    function initializeShippingAndDiscount() {
-        shippingCost = window.$("#txtShippingCost").val() == ""
-            ? 0.00
-            : parseFloat(window.$("#txtShippingCost").val());
-        discount = window.$("#txtDiscount").val() == ""
-            ? 0.00
-            : parseFloat(window.$("#txtDiscount").val());
-    }
-
-    function setTotalAndSubTotal(subTotal, total) {
-        window.$("#lblSubTotal").html(subTotal.toFixed(2));
-        window.$("#lblTotal").html(total.toFixed(2));
-    }
-
-    $("#btnSaveOrder").on("click",
-        function () {
-            saveOrder();
-        });
-
-    $("#btnGoBack").on("click",
-        function () {
-            window.location = "/";
-        });
-</script>
+<script src="~/js/upsertOrder.js"></script>

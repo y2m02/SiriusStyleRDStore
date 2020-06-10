@@ -23,6 +23,9 @@ namespace SiriusStyleRdStoreApp.Mappings
         {
             CreateMap<Customer, CustomerViewModel>();
 
+
+            CreateMap<CustomerRequest, CreateCustomerRequest>();
+
             CreateMap<CustomerViewModel, CreateCustomerRequest>();
             CreateMap<CreateCustomerRequest, Customer>()
                 .ForMember(destination => destination.CreatedOn,

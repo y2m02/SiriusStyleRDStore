@@ -16,6 +16,7 @@ namespace SiriusStyleRdStore.Repositories.Repositories
         Task<IEnumerable<Customer>> BatchUpdate(List<Customer> customers);
         Task<Customer> Delete(Customer customer);
         Task<IEnumerable<Customer>> BatchDelete(List<Customer> customers);
+        Task<IEnumerable<Customer>> GetAllForDropDownList(int customerId);
     }
 
     public class CustomerRepository : BaseRepository, ICustomerRepository
@@ -123,6 +124,15 @@ namespace SiriusStyleRdStore.Repositories.Repositories
             }
 
             return customers;
+        }
+
+        public async Task<IEnumerable<Customer>> GetAllForDropDownList(int customerId)
+        {
+            return await Context.Customer
+                .OrderBy(w => w.FullName)
+                .Where(w => w.DeletedOn == null || w.CustomerId == customerId)
+                .ToListAsync()
+                .ConfigureAwait(false);
         }
     }
 }

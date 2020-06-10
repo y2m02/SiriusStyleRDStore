@@ -10,21 +10,19 @@ using SiriusStyleRdStore.BL.Services;
 using SiriusStyleRdStore.Entities.Enums;
 using SiriusStyleRdStore.Entities.Requests.Product;
 using SiriusStyleRdStore.Entities.ViewModels;
-using SiriusStyleRdStore.Entities.ViewModels.Category;
 using SiriusStyleRdStore.Entities.ViewModels.Item;
 using SiriusStyleRdStore.Entities.ViewModels.Product;
-using SiriusStyleRdStore.Entities.ViewModels.Size;
 using SiriusStyleRdStore.Utility.Extensions;
 
 namespace SiriusStyleRdStoreApp.Controllers
 {
     public class ProductController : Controller
     {
+        private readonly IItemService _itemService;
         private readonly IMapper _mapper;
         private readonly IProductService _productService;
-        private readonly IItemService _itemService;
 
-        public ProductController(IProductService productService, 
+        public ProductController(IProductService productService,
             IMapper mapper, IItemService itemService)
         {
             _productService = productService;
@@ -36,10 +34,10 @@ namespace SiriusStyleRdStoreApp.Controllers
         {
             var itemResponse = await _itemService
                 .Get(new List<ItemType>
-            {
-                ItemType.Category,
-                ItemType.Size
-            });
+                {
+                    ItemType.Category,
+                    ItemType.Size
+                });
 
             if (itemResponse is Success<ItemViewModel> item)
             {
@@ -110,7 +108,8 @@ namespace SiriusStyleRdStoreApp.Controllers
             return Json(await productList.ToDataSourceResultAsync(request, ModelState));
         }
 
-        public async Task<IActionResult> GetByOrderNumber(string orderNumber, [DataSourceRequest] DataSourceRequest request)
+        public async Task<IActionResult> GetByOrderNumber(string orderNumber,
+            [DataSourceRequest] DataSourceRequest request)
         {
             var response = await _productService.GetByOrderNumber(orderNumber).ConfigureAwait(false);
 
@@ -120,7 +119,8 @@ namespace SiriusStyleRdStoreApp.Controllers
             throw new Exception();
         }
 
-        public async Task<ActionResult> GetAllForOrderDetails(string orderNumber, [DataSourceRequest] DataSourceRequest request)
+        public async Task<ActionResult> GetAllForOrderDetails(string orderNumber,
+            [DataSourceRequest] DataSourceRequest request)
         {
             var response = await _productService.GetAllForOrderDetails(orderNumber).ConfigureAwait(false);
 

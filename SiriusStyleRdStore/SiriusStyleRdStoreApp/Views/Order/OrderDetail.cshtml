@@ -103,8 +103,8 @@
                 .Or("O")
                 .Filter("Filtrar")
                 .Clear("Limpiar")))
-        .Scrollable(s => s.Height(700))
-        .HtmlAttributes(new {style = "height:300px;"})
+        .Scrollable(s => s.Height(350))
+        .HtmlAttributes(new { style = "width:100%;" })
         .DataSource(dataSource => dataSource
             .Ajax()
             .PageSize(10)
@@ -125,88 +125,6 @@
                     "</ul>" +
                     "</div>"
                     );
-            }).ToClientTemplate())
-        @*@(Html.Kendo().Grid<ProductViewModel>()
-        .Name("Orders_#=OrderNumber#")
-        .Columns(columns =>
-        {
-            columns.Bound(c => c.ProductCode).Hidden();
-            columns.Bound(c => c.Category).Width(100);
-            columns.Bound(c => c.Description).Width(200)
-                .ClientTemplate(@"<img src='images/products/\\#=Image ?? 'No image.png'\\#' onclick='onClick(this);' class='rounded-circle' height='80' width='80' asp-append-version='true'/><div class='product-name'>\\#: Description \\#</div>");
-            columns.Bound(c => c.Price).Width(75).Format("{0:n2}");
-            columns.Bound(c => c.Size).Width(70)
-                .Filterable(ftb => ftb
-                    .Multi(true)
-                    .CheckAll(false)
-                    .BindTo(((IEnumerable<SizeViewModel>) ViewBag.Sizes)
-                        .Select(size => new
-                        {
-                            Size = size.Description
-                        }))
-                    .Messages(msg => msg
-                        .SelectedItemsFormat("{0} opciones seleccionadas"))
-                );
-        })
-        //.Resizable(c => c.Columns(true))
-        .Pageable(pageable => pageable
-            .Refresh(true)
-            .PageSizes(new[] {10, 15, 20})
-            .Messages(msg => msg
-                .Empty("Sin registros")
-                .ItemsPerPage("registros por página")
-                .First("Ir a la primera página")
-                .Last("Ir a la última página")
-                .Next("Página siguiente")
-                .Previous("Página anterior")
-                .Refresh("Refrescar")
-                .Display("{0} - {1} de {2} registros")
-                .Page("Página")
-                .MorePages("Más páginas")))
-        .Navigatable()
-        .Sortable()
-        //.Groupable(g => g
-        //    .Messages(m => m.Empty("Arrastre una columna hasta aquí para agrupar por dicha columna")))
-        .Filterable(filterable => filterable
-            .Extra(true)
-            .Operators(op =>
-                op.ForString(str => str.Clear()
-                    .Contains("Contiene")
-                    .DoesNotContain("No contiene")
-                    .IsEqualTo("Es igual a")
-                    .IsNotEqualTo("Es diferente de")
-                    .StartsWith("Comienza con")
-                    .EndsWith("Termina con"))
-                    .ForDate(date => date.Clear()
-                        .IsEqualTo("Es igual a")
-                        .IsNotEqualTo("Es diferente de")
-                        .IsGreaterThanOrEqualTo("Mayor o igual que")
-                        .IsGreaterThan("Despúes de")
-                        .IsLessThanOrEqualTo("Hasta")
-                        .IsLessThan("Antes de"))
-                    .ForNumber(num => num.Clear()
-                        .IsEqualTo("Es igual a")
-                        .IsNotEqualTo("Es diferente de")
-                        .IsGreaterThanOrEqualTo("Mayor o igual que")
-                        .IsGreaterThan("Mayor que")
-                        .IsLessThanOrEqualTo("Menor o igual que")
-                        .IsLessThan("Menor que")))
-            .Messages(msg => msg
-                .Info("Mostrar registros con valor que:")
-                .And("Y")
-                .Or("O")
-                .Filter("Filtrar")
-                .Clear("Limpiar")))
-        .Scrollable(s => s.Height(700))
-        .HtmlAttributes(new {style = "height:300px;"})
-        .DataSource(dataSource => dataSource
-            .Ajax()
-            .PageSize(10)
-            .ServerOperation(false)
-            .Model(model => model.Id(p => p.ProductCode))
-            .Read(read => read.Action("GetByOrderNumber", "Product", new {orderNumber = "#=OrderNumber#"}))
-        )
-        .ToClientTemplate()
-        )*@
+            }).ToClientTemplate())      
 
     </script>

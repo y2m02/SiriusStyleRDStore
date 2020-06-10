@@ -7,12 +7,12 @@ using Kendo.Mvc.UI;
 using Microsoft.AspNetCore.Mvc;
 using SiriusStyleRdStore.BL.Services;
 using SiriusStyleRdStore.Entities.Enums;
+using SiriusStyleRdStore.Entities.Requests.Customer;
 using SiriusStyleRdStore.Entities.Requests.Order;
 using SiriusStyleRdStore.Entities.Requests.Product;
 using SiriusStyleRdStore.Entities.ViewModels;
 using SiriusStyleRdStore.Entities.ViewModels.Item;
 using SiriusStyleRdStore.Entities.ViewModels.Order;
-using SiriusStyleRdStore.Utility.Extensions;
 
 namespace SiriusStyleRdStoreApp.Controllers
 {
@@ -61,28 +61,23 @@ namespace SiriusStyleRdStoreApp.Controllers
                 ViewBag.Sizes = item.Response.Sizes;
             }
 
+            var orderRequest = new OrderRequest
+            {
+                Status = OrderStatus.Pending
+            };
+
             if (orderNumber.HasValue())
             {
                 var response = await _orderService.GetByNumber(orderNumber).ConfigureAwait(false);
 
                 if (response is Success<OrderViewModel> order)
-                    return View(_mapper.Map<OrderRequest>(order.Response));
-                //return View(new OrderRequest
-                //    {
-                //        OrderNumber = order.Response.OrderNumber,
-                //        CustomerId = order.Response.CustomerId,
-                //        ShippingCost = order.Response.ShippingCost,
-                //        Discount = order.Response.Discount,
-                //        Total = order.Response.Total,
-                //        SubTotal = order.Response.SubTotal,
-                //        Status = order.Response.Status?.GetEnumValueFromDescription<OrderStatus>()
-                //                 ?? OrderStatus.Pending
-                //    });
+                    orderRequest = _mapper.Map<OrderRequest>(order.Response);
             }
 
-            return View(new OrderRequest
+            return View(new OrderCustomerViewModel
             {
-                Status = OrderStatus.Pending
+                Order = orderRequest,
+                Customer = new CustomerRequest()
             });
         }
 
@@ -91,7 +86,12 @@ namespace SiriusStyleRdStoreApp.Controllers
             var response = await _orderService.GetAll().ConfigureAwait(false);
 
             if (response is Success<IEnumerable<OrderViewModel>> orders)
+            {
+
+
+
                 return Json(await orders.Response.ToDataSourceResultAsync(request));
+            }
 
             throw new Exception();
         }
@@ -123,7 +123,6 @@ namespace SiriusStyleRdStoreApp.Controllers
 
             _ = await _orderService.Create(_mapper.Map<CreateOrderRequest>(order));
 
-            //return RedirectToAction(nameof(Index));
             return Json(order);
         }
 
