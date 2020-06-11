@@ -26,7 +26,6 @@ namespace SiriusStyleRdStore.Repositories.Repositories
         {
             return await Context.Order
                 .Include(w => w.Customer)
-                .Include(w => w.Products)
                 .ToListAsync()
                 .ConfigureAwait(false);
         }
@@ -35,7 +34,6 @@ namespace SiriusStyleRdStore.Repositories.Repositories
         {
             return await Context.Order
                 .Include(w => w.Customer)
-                .Include(w => w.Products)
                 .SingleAsync(w => w.OrderNumber == orderNumber)
                 .ConfigureAwait(false);
         }

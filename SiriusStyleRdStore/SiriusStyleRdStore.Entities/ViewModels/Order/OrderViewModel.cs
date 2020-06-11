@@ -39,10 +39,5 @@ namespace SiriusStyleRdStore.Entities.ViewModels.Order
 
         [DisplayName("Total")]
         public decimal Total { get; set; }
-
-        public decimal TotalPaidAndShipped { get; set; }
-        public decimal GrantTotal { get; set; }
-
-        public List<ProductViewModel> Products { get; set; }
     }
 }
