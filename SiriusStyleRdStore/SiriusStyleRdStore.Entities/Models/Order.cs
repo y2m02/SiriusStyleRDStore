@@ -10,7 +10,6 @@ namespace SiriusStyleRdStore.Entities.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        //[StringLength(10)]
         public string OrderNumber { get; set; }
         
         [Required]
@@ -40,8 +39,6 @@ namespace SiriusStyleRdStore.Entities.Models
 
         [ForeignKey(nameof(CustomerId))] 
         public virtual Customer Customer { get; set; }
-
-        //public virtual ICollection<OrderLine> OrderLines { get; set; }
 
         public virtual ICollection<Product> Products { get; set; }
     }

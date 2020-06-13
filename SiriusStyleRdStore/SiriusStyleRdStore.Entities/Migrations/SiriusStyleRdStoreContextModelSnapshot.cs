@@ -19,6 +19,36 @@ namespace SiriusStyleRdStore.Entities.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("SiriusStyleRdStore.Entities.Models.Bale", b =>
+                {
+                    b.Property<int>("BaleId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("BoughtTo")
+                        .HasColumnType("nvarchar(200)")
+                        .HasMaxLength(200);
+
+                    b.Property<bool>("CompleteUploaded")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(300)")
+                        .HasMaxLength(300);
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("BaleId");
+
+                    b.ToTable("Bale");
+                });
+
             modelBuilder.Entity("SiriusStyleRdStore.Entities.Models.Category", b =>
                 {
                     b.Property<int>("CategoryId")
@@ -130,6 +160,9 @@ namespace SiriusStyleRdStore.Entities.Migrations
                     b.Property<string>("ProductCode")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<int?>("BaleId")
+                        .HasColumnType("int");
+
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
@@ -158,6 +191,8 @@ namespace SiriusStyleRdStore.Entities.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("ProductCode");
+
+                    b.HasIndex("BaleId");
 
                     b.HasIndex("CategoryId");
 
@@ -222,6 +257,10 @@ namespace SiriusStyleRdStore.Entities.Migrations
 
             modelBuilder.Entity("SiriusStyleRdStore.Entities.Models.Product", b =>
                 {
+                    b.HasOne("SiriusStyleRdStore.Entities.Models.Bale", "Bale")
+                        .WithMany("Products")
+                        .HasForeignKey("BaleId");
+
                     b.HasOne("SiriusStyleRdStore.Entities.Models.Category", "Category")
                         .WithMany("Products")
                         .HasForeignKey("CategoryId")

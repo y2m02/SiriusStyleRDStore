@@ -8,7 +8,6 @@ namespace SiriusStyleRdStore.Entities.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        //[StringLength(10)]
         public string ProductCode { get; set; }
 
         [Required]
@@ -31,8 +30,9 @@ namespace SiriusStyleRdStore.Entities.Models
 
         public int? SizeId { get; set; }
 
-        //[StringLength(10)]
         public string OrderNumber { get; set; }
+
+        public int? BaleId { get; set; }
 
         [ForeignKey(nameof(OrderNumber))]
         public virtual Order Order { get; set; }
@@ -43,6 +43,7 @@ namespace SiriusStyleRdStore.Entities.Models
         [ForeignKey(nameof(SizeId))]
         public virtual Size Size { get; set; }
 
-        //public virtual ICollection<OrderLine> OrderLines { get; set; }
+        [ForeignKey(nameof(BaleId))]
+        public virtual Bale Bale { get; set; }
     }
 }

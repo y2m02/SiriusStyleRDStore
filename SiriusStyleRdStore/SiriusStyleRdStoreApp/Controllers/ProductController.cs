@@ -36,13 +36,15 @@ namespace SiriusStyleRdStoreApp.Controllers
                 .Get(new List<ItemType>
                 {
                     ItemType.Category,
-                    ItemType.Size
+                    ItemType.Size,
+                    ItemType.Bale,
                 });
 
             if (itemResponse is Success<ItemViewModel> item)
             {
                 ViewBag.Categories = item.Response.Categories;
                 ViewBag.Sizes = item.Response.Sizes;
+                ViewBag.Bales = item.Response.Bales;
             }
 
             return View();

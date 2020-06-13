@@ -4,6 +4,7 @@
     {
         Customer,
         Category,
-        Size
+        Size,
+        Bale,
     }
 }

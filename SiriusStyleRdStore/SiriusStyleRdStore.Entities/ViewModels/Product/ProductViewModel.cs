@@ -35,5 +35,10 @@ namespace SiriusStyleRdStore.Entities.ViewModels.Product
 
         [DisplayName("Categoría")]
         public string Category { get; set; }
+
+        public string BaleId { get; set; }
+
+        [DisplayName("Paca")]
+        public string Bale { get; set; } 
     }
 }

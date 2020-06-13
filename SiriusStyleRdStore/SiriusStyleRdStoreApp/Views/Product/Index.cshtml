@@ -28,6 +28,7 @@
             {
                 columns.Bound(c => c.ProductCode).Hidden();
                 columns.Bound(c => c.Image).Hidden().Groupable(false);
+                columns.Bound(c => c.Bale).Width(100);
                 columns.Bound(c => c.Category).Width(100);
                 columns.Bound(c => c.Description)
                     .ClientTemplate(@"<img src='images/products/#=Image ?? 'No image.png'#' onclick='onClick(this);' class='rounded-circle' height='80' width='80' asp-append-version='true'/><div class='product-name'>#: Description #</div>").Width(200).Groupable(false);
@@ -56,7 +57,7 @@
                         .Messages(msg => msg
                             .SelectedItemsFormat("{0} opciones seleccionadas"))
                     );
-                columns.Bound(c => c.Comments).Width(100).Groupable(false);
+                //columns.Bound(c => c.Comments).Width(100).Groupable(false);
                 columns.Command(command => command.Custom("Editar").HtmlAttributes(new Dictionary<string, object> {["class"] = "editButton" })).Width(80);
             })
             .Resizable(c => c.Columns(true))

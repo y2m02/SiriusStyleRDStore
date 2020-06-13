@@ -24,5 +24,8 @@ namespace SiriusStyleRdStore.Entities.Requests.Product
 
         [DisplayName("Categoría")]
         public int CategoryId { get; set; }
+
+        [DisplayName("Paca")]
+        public int BaleId { get; set; }
     }
 }

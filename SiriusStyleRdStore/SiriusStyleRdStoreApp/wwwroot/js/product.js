@@ -1,6 +1,6 @@
 ﻿$("#Products").delegate(".editButton",
     "click",
-    function (e) {
+    function(e) {
         var grid = window.$("#Products").data("kendoGrid");
         var rowData = grid.dataItem(window.$(this).closest("tr"));
 
@@ -17,6 +17,10 @@ function fillFields(rowData) {
         window.$(".custom-file-input").siblings(".custom-file-label").addClass("selected").html(fileName);
     }
 
+    var baleId = checkIfValueExists("cbxBales", rowData.BaleId)
+        ? rowData.BaleId
+        : "";
+
     var categoryId = checkIfValueExists("cbxCategories", rowData.CategoryId)
         ? rowData.CategoryId
         : "";
@@ -25,23 +29,25 @@ function fillFields(rowData) {
         ? rowData.SizeId
         : "";
 
+    window.$("#cbxBales").val(baleId);
     window.$("#cbxCategories").val(categoryId);
     window.$("#txtProductCode").val(rowData.ProductCode);
     window.$("#txtDescription").val(rowData.Description);
     window.$("#txtPrice").val(rowData.Price);
     window.$("#cbxSizes").val(sizeId);
-    window.$("#txtComments").val(rowData.Comments);
+    //window.$("#txtComments").val(rowData.Comments);
 }
 
 $("#myModalProduct").on("hidden.bs.modal",
-    function () {
+    function() {
         window.$(".custom-file-input").siblings(".custom-file-label").addClass("selected").html("Elija una imagen");
+        window.$("#cbxBales").val("");
         window.$("#cbxCategories").val("");
         window.$("#txtProductCode").val("");
         window.$("#txtDescription").val("");
         window.$("#txtPrice").val("");
         window.$("#cbxSizes").val("");
-        window.$("#txtComments").val("");
+        //window.$("#txtComments").val("");
 
         clearErrorMessage([
             {
@@ -56,50 +62,27 @@ $("#myModalProduct").on("hidden.bs.modal",
                 'key': "cbxCategories",
                 'value': "lblCategoriesError"
             },
+            {
+                'key': "cbxBales",
+                'value': "lblBalesError"
+            },
         ]);
     });
 
 $(".custom-file-input").on("change",
-    function () {
+    function() {
         var fileName = window.$(this).val().split("\\").pop();
         window.$(this).siblings(".custom-file-label").addClass("selected").html(fileName);
     });
 
 function validate() {
+    var baleIdIsValid = buildError("cbxBales", "lblBalesError");
     var categoryIdIsValid = buildError("cbxCategories", "lblCategoriesError");
     var descriptionIsValid = buildError("txtDescription", "lblDescriptionError");
     var priceIsValid = buildError("txtPrice", "lblPriceError");
 
-    return categoryIdIsValid
+    return baleIdIsValid
+        && categoryIdIsValid
         && descriptionIsValid
         && priceIsValid;
 }
-//$(function () {
-//    window.$("input[id*='txtPrice']").keydown(function (event) {
-
-//        if (event.shiftKey == true) {
-//            event.preventDefault();
-//        }
-
-//        if (!((event.keyCode >= 48 && event.keyCode <= 57) ||
-//            (event.keyCode >= 96 && event.keyCode <= 105) ||
-//            event.keyCode == 8 ||
-//            event.keyCode == 9 ||
-//            event.keyCode == 37 ||
-//            event.keyCode == 39 ||
-//            event.keyCode == 46 ||
-//            event.keyCode == 190)) {
-
-//            event.preventDefault();
-//        }
-
-//        if (window.$(this).val().indexOf(".") !== -1 && event.keyCode == 190)
-//            event.preventDefault();
-//        //if a decimal has been added, disable the "."-button
-//    });
-//});
-
-//$("#openModal").on("click",
-//    function () {
-//        GetDropDownListData("cbxCategories", null, "Category");
-//    });

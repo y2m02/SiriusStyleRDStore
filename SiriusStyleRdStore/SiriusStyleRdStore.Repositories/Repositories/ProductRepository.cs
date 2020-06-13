@@ -35,6 +35,7 @@ namespace SiriusStyleRdStore.Repositories.Repositories
         {
             return await Context.Product
                 .Include(w => w.Category)
+                .Include(w => w.Bale)
                 .Include(w => w.Size)
                 .ToListAsync()
                 .ConfigureAwait(false);
@@ -44,6 +45,7 @@ namespace SiriusStyleRdStore.Repositories.Repositories
         {
             return await Context.Product
                 .Include(w => w.Category)
+                .Include(w => w.Bale)
                 .Include(w => w.Size)
                 .SingleAsync()
                 .ConfigureAwait(false);
@@ -165,6 +167,7 @@ namespace SiriusStyleRdStore.Repositories.Repositories
             return await Context.Product
                 .Include(w => w.Category)
                 .Include(w => w.Size)
+                .Include(w => w.Bale)
                 .Where(w => w.OrderNumber == orderNumber)
                 .AsNoTracking()
                 .ToListAsync()
@@ -176,6 +179,7 @@ namespace SiriusStyleRdStore.Repositories.Repositories
             return await Context.Product
                 .Include(w => w.Category)
                 .Include(w => w.Size)
+                .Include(w => w.Bale)
                 .Where(w =>
                     w.OrderNumber == null
                     || w.OrderNumber == orderNumber

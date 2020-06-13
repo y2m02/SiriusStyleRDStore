@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using SiriusStyleRdStore.Entities.Enums;
 using SiriusStyleRdStore.Entities.ViewModels;
+using SiriusStyleRdStore.Entities.ViewModels.Bale;
 using SiriusStyleRdStore.Entities.ViewModels.Category;
 using SiriusStyleRdStore.Entities.ViewModels.Customer;
 using SiriusStyleRdStore.Entities.ViewModels.Item;
@@ -24,14 +25,16 @@ namespace SiriusStyleRdStore.BL.Services
         private readonly ICustomerRepository _customerRepository;
         private readonly ISizeRepository _sizeRepository;
         private readonly ICategoryRepository _categoryRepository;
+        private readonly IBaleRepository _baleRepository;
 
         public ItemService(IMapper mapper, ICustomerRepository customerRepository,
-            ISizeRepository sizeRepository, ICategoryRepository categoryRepository)
+            ISizeRepository sizeRepository, ICategoryRepository categoryRepository, IBaleRepository baleRepository)
         {
             _mapper = mapper;
             _customerRepository = customerRepository;
             _sizeRepository = sizeRepository;
             _categoryRepository = categoryRepository;
+            _baleRepository = baleRepository;
         }
 
         public async Task<IViewModel> Get(List<ItemType> items)
@@ -54,6 +57,12 @@ namespace SiriusStyleRdStore.BL.Services
             {
                 itemModel.Sizes = _mapper.Map<IEnumerable<SizeViewModel>>(await _sizeRepository
                     .GetAll().ConfigureAwait(false));
+            }
+
+            if (items.Contains(ItemType.Bale))
+            {
+                itemModel.Bales = _mapper.Map<IEnumerable<BaleViewModel>>(await _baleRepository
+                    .GetAllNotCompleteUploaded().ConfigureAwait(false));
             }
 
             return Success(itemModel);

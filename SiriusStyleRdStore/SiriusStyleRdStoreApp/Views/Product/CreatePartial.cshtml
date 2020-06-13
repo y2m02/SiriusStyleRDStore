@@ -34,6 +34,22 @@
                     </div>
                     <div class="form-group">
                         <div class="fieldNameAlign">
+                            @Html.LabelFor(model => model.BaleId) @Html.Label("", "*", new {@class = "text-danger"})
+                        </div>
+                        <div class="input-group mb-2 mr-sm-2">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">
+                                    <i class="fas fa-box"
+                                       aria-hidden="true">
+                                    </i>
+                                </span>
+                            </div>
+                            @Html.DropDownListFor(model => model.BaleId, new SelectList(ViewBag.Bales, "BaleId", "IdAndDescription"), "Elija una opción", new {@class = "form-control", Id = "cbxBales", onchange = "removeErrorMessage('cbxBales','lblBalesError')" })
+                        </div>
+                        <span id="lblBalesError" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <div class="fieldNameAlign">
                             @Html.LabelFor(model => model.CategoryId) @Html.Label("", "*", new {@class = "text-danger"})
                         </div>
                         <div class="input-group mb-2 mr-sm-2">
@@ -97,7 +113,7 @@
                         </div>
                         <span id="lblSizesError" class="text-danger"></span>
                     </div>
-                    <div class="form-group">
+                    @*<div class="form-group">
                         <div class="fieldNameAlign">
                             @Html.LabelFor(model => model.Comments)
                         </div>
@@ -112,7 +128,7 @@
                             @Html.TextBoxFor(model => model.Comments, new {@class = "form-control", Id = "txtComments"})
                         </div>
                         <span id="lblCommentsError" class="text-danger"></span>
-                    </div>
+                    </div>*@
                 </div>
                 <div class="modal-footer">
                     <input type="submit" value="Guardar" class="btn btn-primary" id="btnUpsert" onclick="return validate();"/>
