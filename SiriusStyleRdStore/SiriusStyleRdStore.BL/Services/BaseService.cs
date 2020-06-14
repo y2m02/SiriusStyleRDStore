@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using SiriusStyleRdStore.Entities.Responses;
 using SiriusStyleRdStore.Entities.ViewModels;
 
 namespace SiriusStyleRdStore.BL.Services
