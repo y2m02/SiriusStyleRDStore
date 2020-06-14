@@ -33,16 +33,13 @@ namespace SiriusStyleRdStore.BL.Services
                 var reports = new List<EarningReportViewModel>();
                 foreach (var bale in bales)
                 {
-                    decimal total = 0;
-                    foreach (var product in bale.Products
+                    var total = bale.Products
                         .Where(
                             w => w.OrderNumber != null
                                  && (w.Order.Status == OrderStatus.Paid
                                      || w.Order.Status == OrderStatus.Shipped)
-                        ))
-                    {
-                        total += product.Price - (product.Order.Discount / product.Order.Products.Count);
-                    }
+                        )
+                        .Sum(product => product.Price - product.Order.Discount / product.Order.Products.Count);
 
                     var report = new EarningReportViewModel
                     {
