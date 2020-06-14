@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using SiriusStyleRdStore.Entities.Enums;
 using SiriusStyleRdStore.Entities.Models;
 
 namespace SiriusStyleRdStore.Repositories.Repositories
@@ -11,6 +9,7 @@ namespace SiriusStyleRdStore.Repositories.Repositories
     public interface IBaleRepository
     {
         Task<IEnumerable<Bale>> GetAll();
+        Task<IEnumerable<Bale>> GetAllWithProducts();
         Task<Bale> GetById(int baleId);
         Task<Bale> Create(Bale bale);
         Task<IEnumerable<Bale>> BatchCreate(List<Bale> bales);
@@ -30,29 +29,20 @@ namespace SiriusStyleRdStore.Repositories.Repositories
 
         public async Task<IEnumerable<Bale>> GetAll()
         {
-            var a = await Context.Bale
+            return await Context.Bale
+                .Where(w => w.DeletedOn == null)
+                .ToListAsync()
+                .ConfigureAwait(false);
+        }
+
+        public async Task<IEnumerable<Bale>> GetAllWithProducts()
+        {
+            return await Context.Bale
                 .Include(w => w.Products)
                 .ThenInclude(w => w.Order)
                 .Where(w => w.DeletedOn == null)
                 .ToListAsync()
                 .ConfigureAwait(false);
-
-            decimal b = 0;
-            var list = new Dictionary<string, decimal>();
-            foreach (var bale in a)
-            {
-                foreach (var baleProduct in bale.Products.Where(w => w.OrderNumber != null)
-                )
-                {
-                    if (baleProduct.Order.Status == OrderStatus.Shipped || baleProduct.Order.Status==OrderStatus.Paid)
-                    {
-                        b += baleProduct.Price;
-                    }
-                }
-                list.Add(bale.Description, b);
-            }
-
-            return a;
         }
 
         public async Task<Bale> GetById(int baleId)
