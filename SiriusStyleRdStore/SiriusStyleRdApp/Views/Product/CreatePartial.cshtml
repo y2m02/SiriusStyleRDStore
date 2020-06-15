@@ -1,0 +1,140 @@
+﻿@model SiriusStyleRd.Entities.Requests.Product.CreateProductRequest
+
+<div class="modal fade" id="myModalProduct" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            @using (Html.BeginForm("Upsert", "Product", FormMethod.Post, new {enctype = "multipart/form-data"}))
+            {
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">Crear - Editar</h4>
+                </div>
+                <div class="requiredFields">
+                    @Html.Label("", "Campos con (*) son obligatorios.", new {@class = "text-danger"})
+                </div>
+                @Html.TextBoxFor(model => model.ProductCode, new {@class = "form-control", Id = "txtProductCode", hidden = true})
+                <div class="modal-body">
+                    <div class="form-group">
+                        <div class="fieldNameAlign">
+                            @Html.LabelFor(model => model.Image)
+                        </div>
+                        <div class="input-group mb-2 mr-sm-2">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">
+                                    <i class="fas fa-tshirt"
+                                       aria-hidden="true">
+                                    </i>
+                                </span>
+                            </div>
+                            <div class="custom-file">
+                                <input asp-for="Image" class="custom-file-input" id="customFile">
+                                <label class="custom-file-label" for="customFile" id="lblImage">Elija una imagen</label>
+                            </div>
+                        </div>
+                        <span id="ImageMessage" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <div class="fieldNameAlign">
+                            @Html.LabelFor(model => model.BaleId) @Html.Label("", "*", new {@class = "text-danger"})
+                        </div>
+                        <div class="input-group mb-2 mr-sm-2">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">
+                                    <i class="fas fa-box"
+                                       aria-hidden="true">
+                                    </i>
+                                </span>
+                            </div>
+                            @Html.DropDownListFor(model => model.BaleId, new SelectList(ViewBag.Bales, "BaleId", "IdAndDescription"), "Elija una opción", new {@class = "form-control", Id = "cbxBales", onchange = "removeErrorMessage('cbxBales','lblBalesError')" })
+                        </div>
+                        <span id="lblBalesError" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <div class="fieldNameAlign">
+                            @Html.LabelFor(model => model.CategoryId) @Html.Label("", "*", new {@class = "text-danger"})
+                        </div>
+                        <div class="input-group mb-2 mr-sm-2">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">
+                                    <i class="fas fa-tshirt"
+                                       aria-hidden="true">
+                                    </i>
+                                </span>
+                            </div>
+                            @Html.DropDownListFor(model => model.CategoryId, new SelectList(ViewBag.Categories, "CategoryId", "Description"), "Elija una opción", new {@class = "form-control", Id = "cbxCategories", onchange = "removeErrorMessage('cbxCategories','lblCategoriesError')"})
+                            @*@Html.DropDownListFor(model => model.CategoryId, new SelectList(new List<Category>()), "Elija una opción", new { @class = "form-control", Id = "cbxCategories", onchange = "removeErrorMessage('cbxCategories','lblCategoriesError')" })*@
+                        </div>
+                        <span id="lblCategoriesError" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <div class="fieldNameAlign">
+                            @Html.LabelFor(model => model.Description) @Html.Label("", "*", new {@class = "text-danger"})
+                        </div>
+                        <div class="input-group mb-2 mr-sm-2">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">
+                                    <i class="fas fa-pen-alt"
+                                       aria-hidden="true">
+                                    </i>
+                                </span>
+                            </div>
+                            @Html.TextBoxFor(model => model.Description, new {@class = "form-control", Id = "txtDescription", oninput = "removeErrorMessage('txtDescription','lblDescriptionError')"})
+                        </div>
+                        <span id="lblDescriptionError" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <div class="fieldNameAlign">
+                            @Html.LabelFor(model => model.Price) @Html.Label("", "*", new {@class = "text-danger"})
+                        </div>
+                        <div class="input-group mb-2 mr-sm-2">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">
+                                    <i class="fas fa-dollar-sign"
+                                       aria-hidden="true">
+                                    </i>
+                                </span>
+                            </div>
+                            @Html.TextBoxFor(model => model.Price, new {@class = "form-control numericField", Id = "txtPrice", oninput = "removeErrorMessage('txtPrice','lblPriceError')"})
+                        </div>
+                        <span id="lblPriceError" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <div class="fieldNameAlign">
+                            @Html.LabelFor(model => model.SizeId)
+                        </div>
+                        <div class="input-group mb-2 mr-sm-2">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">
+                                    <i class="fas fa-shapes"
+                                       aria-hidden="true">
+                                    </i>
+                                </span>
+                            </div>
+                            @Html.DropDownListFor(model => model.SizeId, new SelectList(ViewBag.Sizes, "SizeId", "Description"), "Elija una opción", new {@class = "form-control", Id = "cbxSizes", onchange = "removeErrorMessage('cbxSizes','lblSizesError')"})
+                        </div>
+                        <span id="lblSizesError" class="text-danger"></span>
+                    </div>
+                    @*<div class="form-group">
+                        <div class="fieldNameAlign">
+                            @Html.LabelFor(model => model.Comments)
+                        </div>
+                        <div class="input-group mb-2 mr-sm-2">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">
+                                    <i class="fas fa-clipboard"
+                                       aria-hidden="true">
+                                    </i>
+                                </span>
+                            </div>
+                            @Html.TextBoxFor(model => model.Comments, new {@class = "form-control", Id = "txtComments"})
+                        </div>
+                        <span id="lblCommentsError" class="text-danger"></span>
+                    </div>*@
+                </div>
+                <div class="modal-footer">
+                    <input type="submit" value="Guardar" class="btn btn-primary" id="btnUpsert" onclick="return validate();"/>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>

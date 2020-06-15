@@ -1,0 +1,218 @@
+﻿@using SiriusStyleRd.Utility.Extensions
+@using SiriusStyleRd.Entities.Enums
+@using SiriusStyleRd.Entities.ViewModels.Product
+@using SiriusStyleRd.Entities.ViewModels.Size
+@model SiriusStyleRd.Entities.ViewModels.OrderCustomerViewModel
+@{
+    ViewData["Title"] = "Crear - Editar órden";
+
+    var enums = Enum.GetValues(typeof(OrderStatus)).Cast<OrderStatus>()
+        .Select(w => new
+        {
+            Id = w,
+            Value = w.GetDescription()
+        });
+
+    var statusSelectList = new SelectList(
+        enums,
+        "Id",
+        "Value"
+        );
+}
+<style>
+    #btnCustomerModal:active {
+        -ms-transform: scale(-1); /* IE 9 */
+        -webkit-transform: scale(-1); /* Safari 3-8 */
+        transform: scale(-1);
+    }
+
+    .form-control { border-radius: 0.25rem !important; }
+</style>
+<h1>Crear - Editar órden</h1>
+
+<div>
+    <div class="row">
+        @Html.TextBoxFor(model => model.Order.OrderNumber, new {id = "txtOrderNumber", hidden = true})
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            @Html.LabelFor(model => model.Order.CustomerId)
+            <div class="input-group mb-2 mr-sm-2">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1">
+                        <i class="fas fa-user"
+                           aria-hidden="true">
+                        </i>
+                    </span>
+                </div>
+                @Html.DropDownListFor(model => model.Order.CustomerId, new SelectList(ViewBag.Customers, "CustomerId", "FullName"), "Elija una opción", new {@class = "form-control", Id = "cbxCustomers", onchange = "removeErrorMessage('cbxCustomers','lblCustomersError')"})
+                <span style="background-color: #3276b1; border-radius: 5px; padding-left: 12px;" id="btnCustomerModal" class="btn btn-primary" data-toggle="modal" data-target="#myModalCustomer">
+                    <i style="color: white;" class="fas fa-plus-circle"
+                       aria-hidden="true">
+                    </i>
+                </span>
+            </div>
+            <span id="lblCustomersError" class="text-danger"></span>
+        </div>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            @Html.LabelFor(model => model.Order.Status)
+            <div class="input-group mb-2 mr-sm-2">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1">
+                        <i class="fas fa-info-circle"
+                           aria-hidden="true">
+                        </i>
+                    </span>
+                </div>
+                @Html.DropDownListFor(model => model.Order.Status, statusSelectList, "Elija una opción", new {@class = "form-control", Id = "cbxStatus", onchange = "removeErrorMessage('cbxStatus','lblStatusError')"})
+            </div>
+            <span id="lblStatusError" class="text-danger"></span>
+        </div>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            @Html.LabelFor(model => model.Order.ShippingCost)
+            <div class="input-group mb-2 mr-sm-2">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1">
+                        <i class="fas fa-dollar-sign"
+                           aria-hidden="true">
+                        </i>
+                    </span>
+                </div>
+                @Html.TextBoxFor(model => model.Order.ShippingCost, new {@class = "form-control numericField", Id = "txtShippingCost" @*, oninput = "removeErrorMessage('txtShippingCost','lblShippingCostError')"*@})
+                <span id="lblShippingCostError" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            @Html.LabelFor(model => model.Order.Discount)
+            <div class="input-group mb-2 mr-sm-2">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1">
+                        <i class="fas fa-dollar-sign"
+                           aria-hidden="true">
+                        </i>
+                    </span>
+                </div>
+                @Html.TextBoxFor(model => model.Order.Discount, new {@class = "form-control numericField", Id = "txtDiscount" @*, oninput = "removeErrorMessage('txtDiscount','lblDiscountError')"*@})
+                <span id="lblDiscountError" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+</div>
+<br/>
+<br/>
+<div id="orderDetailsDiv">
+
+    <div class="row">
+        <div class="col-sm-8">
+
+            @Html.Label("", "Elija los artículos:", new {style = "font-weight:bold"})
+        </div>
+        <div class="col-sm-4" style="text-align: right">
+            @Html.Label("", "Subtotal: RD$", new {style = "font-weight:bold"}) @Html.Label("", "0.00", new {style = "font-weight:bold", id = "lblSubTotal"})
+            <br/>
+            @Html.Label("", "Total: RD$", new {style = "font-weight:bold"}) @Html.Label("", "0.00", new {style = "font-weight:bold", id = "lblTotal"})
+        </div>
+    </div>
+    <div class="row">
+        <span id="lblProductsError" class="text-danger" style="padding-left: 15px;"></span>
+    </div>
+    @(Html.Kendo().Grid<ProductViewModel>()
+        .Name("Products")
+        .Columns(columns =>
+        {
+            columns.Bound(c => c.ProductCode).Hidden();
+            columns.Select().Width(50);
+            columns.Bound(c => c.Category).Width(100);
+            columns.Bound(c => c.Description).Width(200)
+                .ClientTemplate(@"<img src='../images/products/#=Image ?? 'No image.png'#' onclick='onClick(this);' class='rounded-circle' height='80' width='80' asp-append-version='true'/><div class='product-name'>#: Description #</div>");
+            columns.Bound(c => c.Price).Width(75).Format("{0:n2}");
+            columns.Bound(c => c.Size).Width(70)
+                .Filterable(ftb => ftb
+                    .Multi(true)
+                    .CheckAll(false)
+                    .BindTo(((IEnumerable<SizeViewModel>) ViewBag.Sizes)
+                        .Select(size => new
+                        {
+                            Size = size.Description
+                        }))
+                    .Messages(msg => msg
+                        .SelectedItemsFormat("{0} opciones seleccionadas"))
+                );
+        })
+        .Resizable(c => c.Columns(true))
+        .Pageable(pageable => pageable
+            .Refresh(true)
+            .PageSizes(new[] {100, 300, 500})
+            .Messages(msg => msg
+                .Empty("Sin registros")
+                .ItemsPerPage("registros por página")
+                .First("Ir a la primera página")
+                .Last("Ir a la última página")
+                .Next("Página siguiente")
+                .Previous("Página anterior")
+                .Refresh("Refrescar")
+                .Display("{0} - {1} de {2} registros")
+                .Page("Página")
+                .MorePages("Más páginas")))
+        .Navigatable()
+        .Sortable()
+        .PersistSelection()
+        .Filterable(filterable => filterable
+            .Extra(true)
+            .Operators(op =>
+                op.ForString(str => str.Clear()
+                    .Contains("Contiene")
+                    .DoesNotContain("No contiene")
+                    .IsEqualTo("Es igual a")
+                    .IsNotEqualTo("Es diferente de")
+                    .StartsWith("Comienza con")
+                    .EndsWith("Termina con"))
+                    .ForDate(date => date.Clear()
+                        .IsEqualTo("Es igual a")
+                        .IsNotEqualTo("Es diferente de")
+                        .IsGreaterThanOrEqualTo("Mayor o igual que")
+                        .IsGreaterThan("Despúes de")
+                        .IsLessThanOrEqualTo("Hasta")
+                        .IsLessThan("Antes de"))
+                    .ForNumber(num => num.Clear()
+                        .IsEqualTo("Es igual a")
+                        .IsNotEqualTo("Es diferente de")
+                        .IsGreaterThanOrEqualTo("Mayor o igual que")
+                        .IsGreaterThan("Mayor que")
+                        .IsLessThanOrEqualTo("Menor o igual que")
+                        .IsLessThan("Menor que")))
+            .Messages(msg => msg
+                .Info("Mostrar registros con valor que:")
+                .And("Y")
+                .Or("O")
+                .Filter("Filtrar")
+                .Clear("Limpiar")))
+        .Scrollable(s => s.Height(700))
+        .Events(ev => ev.Change("onChange"))
+        .DataSource(dataSource => dataSource
+            .Ajax()
+            .PageSize(100)
+            .ServerOperation(false)
+            .Model(model => model.Id(p => p.ProductCode))
+            .Read(read => read.Action("GetAllForOrderDetails", "Product", new {orderNumber = Model.Order.OrderNumber}))
+        )
+        )
+</div>
+<div style="padding-bottom: 25px; padding-top: 10px;">
+    <button type="button" class="btn btn-primary" style="float: left" id="btnGoBack">
+        <i class="fas fa-arrow-left "
+           aria-hidden="true">
+        </i> Regresar
+    </button>
+    <div class="col-sm-12">
+        <button type="button" class="btn btn-primary" style="float: right" id="btnSaveOrder">
+            Guardar
+            <i class="fab fa-telegram-plane"
+               aria-hidden="true">
+            </i>
+        </button>
+    </div>
+</div>
+
+@await Html.PartialAsync("../Product/ImagePartial")
+@await Html.PartialAsync("../Customer/CreatePartial")
+
+<script src="~/js/upsertOrder.js"></script>
