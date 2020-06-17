@@ -37,6 +37,10 @@ namespace SiriusStyleRd.Entities.Models
         [Required]
         public decimal Total { get; set; }
 
+        public DateTime? PaidOrShippedOn { get; set; }
+
+        public decimal? AdditionalEarnings { get; set; }
+
         [ForeignKey(nameof(CustomerId))] 
         public virtual Customer Customer { get; set; }
 

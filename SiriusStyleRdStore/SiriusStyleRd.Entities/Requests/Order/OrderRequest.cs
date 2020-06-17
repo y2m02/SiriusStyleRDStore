@@ -26,6 +26,9 @@ namespace SiriusStyleRd.Entities.Requests.Order
         [DisplayName("Total")]
         public decimal Total { get; set; }
 
+        [DisplayName("Ganancia adicional")]
+        public decimal? AdditionalEarnings { get; set; }
+
         public List<string> ProductCodes { get; set; }
     }
 }

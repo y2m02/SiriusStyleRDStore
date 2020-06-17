@@ -39,7 +39,9 @@ namespace SiriusStyleRd.Services.Services
                                  && (w.Order.Status == OrderStatus.Paid
                                      || w.Order.Status == OrderStatus.Shipped)
                         )
-                        .Sum(product => product.Price - product.Order.Discount / product.Order.Products.Count);
+                        .Sum(product => product.Price 
+                                        + (product.Order.AdditionalEarnings.GetValueOrDefault() / product.Order.Products.Count) 
+                                        - (product.Order.Discount / product.Order.Products.Count));
 
                     var report = new EarningReportViewModel
                     {

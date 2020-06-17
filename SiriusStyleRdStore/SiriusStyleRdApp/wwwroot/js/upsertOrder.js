@@ -1,6 +1,7 @@
 ﻿var grid;
 var shippingCost = 0;
 var discount = 0;
+var additionalEarnings = 0;
 var subTotal = 0;
 var totalPrices = 0;
 
@@ -83,6 +84,7 @@ function buildOrder() {
         "Status": status,
         "ShippingCost": shippingCost,
         "Discount": discount,
+        "AdditionalEarnings": additionalEarnings,
         "SubTotal": subTotal,
         "Total": total,
         "ProductCodes": productCodes
@@ -128,7 +130,7 @@ function onChange(e) {
     });
 
     subTotal = totalPrices + shippingCost;
-    var total = totalPrices - discount;
+    var total = totalPrices + additionalEarnings - discount;
     setTotalAndSubTotal(subTotal, total);
 }
 
@@ -143,11 +145,11 @@ function getCheckedValues(grid) {
     return productCodes;
 }
 
-window.$("#txtShippingCost, #txtDiscount").on("input",
+window.$("#txtShippingCost, #txtAdditionalEarnings, #txtDiscount").on("input",
     function () {
         initializeShippingAndDiscount();
 
-        setTotalAndSubTotal(totalPrices + shippingCost, totalPrices - discount);
+        setTotalAndSubTotal(totalPrices + shippingCost, totalPrices + additionalEarnings - discount);
     });
 
 
@@ -155,9 +157,14 @@ function initializeShippingAndDiscount() {
     shippingCost = window.$("#txtShippingCost").val() == ""
         ? 0.00
         : parseFloat(window.$("#txtShippingCost").val());
+
     discount = window.$("#txtDiscount").val() == ""
         ? 0.00
         : parseFloat(window.$("#txtDiscount").val());
+
+    additionalEarnings = window.$("#txtAdditionalEarnings").val() == ""
+        ? 0.00
+        : parseFloat(window.$("#txtAdditionalEarnings").val());
 }
 
 function setTotalAndSubTotal(subTotal, total) {

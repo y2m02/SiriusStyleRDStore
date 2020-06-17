@@ -35,11 +35,13 @@ namespace SiriusStyleRdApp.Controllers
             var itemResponse = await _itemService
                 .Get(new List<ItemType>
                 {
-                    ItemType.Size
+                    ItemType.Category,
+                    ItemType.Size,
                 });
 
             if (itemResponse is Success<ItemViewModel> item)
             {
+                ViewBag.Categories = item.Response.Categories;
                 ViewBag.Sizes = item.Response.Sizes;
             }
 
@@ -52,13 +54,15 @@ namespace SiriusStyleRdApp.Controllers
                 .Get(new List<ItemType>
                 {
                     ItemType.Customer,
-                    ItemType.Size
+                    ItemType.Category,
+                    ItemType.Size,
                 });
 
             if (itemResponse is Success<ItemViewModel> item)
             {
                 ViewBag.Customers = item.Response.Customers;
                 ViewBag.Sizes = item.Response.Sizes;
+                ViewBag.Categories = item.Response.Categories;
             }
 
             var orderRequest = new OrderRequest
@@ -87,9 +91,6 @@ namespace SiriusStyleRdApp.Controllers
 
             if (response is Success<IEnumerable<OrderViewModel>> orders)
             {
-
-
-
                 return Json(await orders.Response.ToDataSourceResultAsync(request));
             }
 

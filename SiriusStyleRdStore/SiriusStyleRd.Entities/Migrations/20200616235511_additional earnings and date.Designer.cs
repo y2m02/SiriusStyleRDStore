@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SiriusStyleRd.Entities.Models;
 
 namespace SiriusStyleRd.Entities.Migrations
 {
     [DbContext(typeof(SiriusStyleRdContext))]
-    partial class SiriusStyleRdContextModelSnapshot : ModelSnapshot
+    [Migration("20200616235511_additional earnings and date")]
+    partial class additionalearningsanddate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -1,5 +1,6 @@
 ﻿@using SiriusStyleRd.Utility.Extensions
 @using SiriusStyleRd.Entities.Enums
+@using SiriusStyleRd.Entities.ViewModels.Category
 @using SiriusStyleRd.Entities.ViewModels.Product
 @using SiriusStyleRd.Entities.ViewModels.Size
 @model SiriusStyleRd.Entities.ViewModels.OrderCustomerViewModel
@@ -94,6 +95,20 @@
                 <span id="lblDiscountError" class="text-danger"></span>
             </div>
         </div>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            @Html.LabelFor(model => model.Order.AdditionalEarnings)
+            <div class="input-group mb-2 mr-sm-2">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1">
+                        <i class="fas fa-dollar-sign"
+                           aria-hidden="true">
+                        </i>
+                    </span>
+                </div>
+                @Html.TextBoxFor(model => model.Order.AdditionalEarnings, new {@class = "form-control numericField", Id = "txtAdditionalEarnings" @*, oninput = "removeErrorMessage('txtDiscount','lblDiscountError')"*@})
+                <span id="lblAdditionalEarningsError" class="text-danger"></span>
+            </div>
+        </div>
     </div>
 </div>
 <br/>
@@ -120,7 +135,18 @@
         {
             columns.Bound(c => c.ProductCode).Hidden();
             columns.Select().Width(50);
-            columns.Bound(c => c.Category).Width(100);
+            columns.Bound(c => c.Category).Width(100)
+                .Filterable(ftb => ftb
+                    .Multi(true)
+                    .CheckAll(false)
+                    .BindTo(((IEnumerable<CategoryViewModel>)ViewBag.Categories)
+                        .Select(category => new
+                        {
+                            Category = category.Description
+                        }))
+                    .Messages(msg => msg
+                        .SelectedItemsFormat("{0} opciones seleccionadas"))
+                );
             columns.Bound(c => c.Description).Width(200)
                 .ClientTemplate(@"<img src='../images/products/#=Image ?? 'No image.png'#' onclick='onClick(this);' class='rounded-circle' height='80' width='80' asp-append-version='true'/><div class='product-name'>#: Description #</div>");
             columns.Bound(c => c.Price).Width(75).Format("{0:n2}");

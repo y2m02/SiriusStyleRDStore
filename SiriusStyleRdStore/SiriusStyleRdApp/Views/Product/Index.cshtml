@@ -3,6 +3,8 @@
 @using SiriusStyleRd.Entities.ViewModels.Size
 @using SiriusStyleRd.Entities.Enums
 @using Kendo.Mvc
+@using SiriusStyleRd.Entities.ViewModels.Bale
+@using SiriusStyleRd.Entities.ViewModels.Category
 @{
     ViewData["Title"] = "Productos";
 }
@@ -27,8 +29,30 @@
             {
                 columns.Bound(c => c.ProductCode).Hidden();
                 columns.Bound(c => c.Image).Hidden().Groupable(false);
-                columns.Bound(c => c.Bale).Width(100);
-                columns.Bound(c => c.Category).Width(100);
+                columns.Bound(c => c.Bale).Width(100)
+                    .Filterable(ftb => ftb
+                        .Multi(true)
+                        .CheckAll(false)
+                        .BindTo(((IEnumerable<BaleViewModel>) ViewBag.Bales)
+                            .Select(bale => new
+                            {
+                                Bale = bale.IdAndDescription
+                            }))
+                        .Messages(msg => msg
+                            .SelectedItemsFormat("{0} opciones seleccionadas"))
+                        );
+                columns.Bound(c => c.Category).Width(100)
+                    .Filterable(ftb => ftb
+                        .Multi(true)
+                        .CheckAll(false)
+                        .BindTo(((IEnumerable<CategoryViewModel>) ViewBag.Categories)
+                            .Select(category => new
+                            {
+                                Category = category.Description
+                            }))
+                        .Messages(msg => msg
+                            .SelectedItemsFormat("{0} opciones seleccionadas"))
+                    );
                 columns.Bound(c => c.Description)
                     .ClientTemplate(@"<img src='images/products/#=Image ?? 'No image.png'#' onclick='onClick(this);' class='rounded-circle' height='80' width='80' asp-append-version='true'/><div class='product-name'>#: Description #</div>").Width(200).Groupable(false);
                 columns.Bound(c => c.Price).Width(75).Groupable(false).Format("{0:n2}");

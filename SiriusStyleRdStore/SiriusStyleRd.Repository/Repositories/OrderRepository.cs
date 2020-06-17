@@ -53,12 +53,14 @@ namespace SiriusStyleRd.Repository.Repositories
             {
                 nameof(order.Status),
                 nameof(order.CustomerId),
-                nameof(order.ShippedOn),
-                nameof(order.PaidOn),
+                //nameof(order.ShippedOn),
+                //nameof(order.PaidOn),
                 nameof(order.ShippingCost),
                 nameof(order.Discount),
                 nameof(order.SubTotal),
-                nameof(order.Total)
+                nameof(order.Total),
+                nameof(order.PaidOrShippedOn),
+                nameof(order.AdditionalEarnings),
             });
 
             await Save();

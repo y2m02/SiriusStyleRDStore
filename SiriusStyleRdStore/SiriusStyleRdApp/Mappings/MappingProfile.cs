@@ -104,14 +104,18 @@ namespace SiriusStyleRdApp.Mappings
                     member => member.MapFrom(field => field.ShippingCost.ToNumericFormat(2)))
                 .ForMember(destination => destination.Discount,
                     member => member.MapFrom(field => field.Discount.ToNumericFormat(2)))
-                .ForMember(destination => destination.ShippedOn,
-                    member => member.MapFrom(field => field.ShippedOn.ToFormattedString(DateFormat.ddMMyyyy)))
-                .ForMember(destination => destination.PaidOn,
-                    member => member.MapFrom(field => field.PaidOn.ToFormattedString(DateFormat.ddMMyyyy)))
+                //.ForMember(destination => destination.ShippedOn,
+                //    member => member.MapFrom(field => field.ShippedOn.ToFormattedString(DateFormat.ddMMyyyy)))
+                //.ForMember(destination => destination.PaidOn,
+                //    member => member.MapFrom(field => field.PaidOn.ToFormattedString(DateFormat.ddMMyyyy)))
                 .ForMember(destination => destination.Customer,
                     member => member.MapFrom(field => field.Customer.FullName))
                 .ForMember(destination => destination.CreatedOn,
-                    member => member.MapFrom(field => field.CreatedOn.Date));
+                    member => member.MapFrom(field => field.CreatedOn.Date))
+                .ForMember(destination => destination.PaidOrShippedOn,
+                    member => member.MapFrom(field => field.PaidOrShippedOn.ToFormattedString(DateFormat.ddMMyyyy)))
+                .ForMember(destination => destination.AdditionalEarnings,
+                    member => member.MapFrom(field => field.AdditionalEarnings.ToNumericFormat(2)));
 
             CreateMap<OrderViewModel, OrderRequest>()
                 .ForMember(destination => destination.Status,
@@ -121,29 +125,43 @@ namespace SiriusStyleRdApp.Mappings
             CreateMap<CreateOrderRequest, Order>()
                 .ForMember(destination => destination.CreatedOn,
                     member => member.MapFrom(field => DateTime.Now))
-                .ForMember(destination => destination.ShippedOn,
-                    member => member.MapFrom(field =>
-                        field.Status == OrderStatus.Shipped ? (DateTime?) DateTime.Now : null))
-                .ForMember(destination => destination.PaidOn,
-                    member => member.MapFrom(field =>
-                        field.Status == OrderStatus.Paid ? (DateTime?) DateTime.Now : null))
+                //.ForMember(destination => destination.ShippedOn,
+                //    member => member.MapFrom(field =>
+                //        field.Status == OrderStatus.Shipped ? (DateTime?) DateTime.Now : null))
+                //.ForMember(destination => destination.PaidOn,
+                //    member => member.MapFrom(field =>
+                //        field.Status == OrderStatus.Paid ? (DateTime?) DateTime.Now : null))
                 .ForMember(destination => destination.Discount,
                     member => member.MapFrom(field => field.Discount.GetValueOrDefault()))
                 .ForMember(destination => destination.ShippingCost,
-                    member => member.MapFrom(field => field.ShippingCost.GetValueOrDefault()));
+                    member => member.MapFrom(field => field.ShippingCost.GetValueOrDefault()))
+                .ForMember(destination => destination.AdditionalEarnings,
+                    member => member.MapFrom(field => field.AdditionalEarnings.GetValueOrDefault()))
+                .ForMember(destination => destination.PaidOrShippedOn,
+                    member => member.MapFrom(field =>
+                        field.Status == OrderStatus.Paid || field.Status == OrderStatus.Shipped
+                            ? (DateTime?) DateTime.Now
+                            : null));
 
             CreateMap<OrderRequest, UpdateOrderRequest>();
             CreateMap<UpdateOrderRequest, Order>()
-                .ForMember(destination => destination.ShippedOn,
-                    member => member.MapFrom(field =>
-                        field.Status == OrderStatus.Shipped ? (DateTime?) DateTime.Now : null))
-                .ForMember(destination => destination.PaidOn,
-                    member => member.MapFrom(field =>
-                        field.Status == OrderStatus.Paid ? (DateTime?) DateTime.Now : null))
+                //.ForMember(destination => destination.ShippedOn,
+                //    member => member.MapFrom(field =>
+                //        field.Status == OrderStatus.Shipped ? (DateTime?) DateTime.Now : null))
+                //.ForMember(destination => destination.PaidOn,
+                //    member => member.MapFrom(field =>
+                //        field.Status == OrderStatus.Paid ? (DateTime?) DateTime.Now : null))
                 .ForMember(destination => destination.Discount,
                     member => member.MapFrom(field => field.Discount.GetValueOrDefault()))
                 .ForMember(destination => destination.ShippingCost,
-                    member => member.MapFrom(field => field.ShippingCost.GetValueOrDefault()));
+                    member => member.MapFrom(field => field.ShippingCost.GetValueOrDefault()))
+                .ForMember(destination => destination.AdditionalEarnings,
+                    member => member.MapFrom(field => field.AdditionalEarnings.GetValueOrDefault()))
+                .ForMember(destination => destination.PaidOrShippedOn,
+                    member => member.MapFrom(field =>
+                        field.Status == OrderStatus.Paid || field.Status == OrderStatus.Shipped
+                            ? (DateTime?) DateTime.Now
+                            : null));
 
             CreateMap<OrderRequest, CancelOrderRequest>();
             CreateMap<CancelOrderRequest, Order>();

@@ -1,5 +1,6 @@
 ﻿@using SiriusStyleRd.Entities.ViewModels.Product
 @using SiriusStyleRd.Entities.ViewModels.Size
+@using SiriusStyleRd.Entities.ViewModels.Category
 <style>
     .k-detail-cell .k-tabstrip .k-content { padding: 0.2em; }
 
@@ -38,6 +39,18 @@
         {
             columns.Bound(c => c.ProductCode).Hidden();
             columns.Bound(c => c.Category).Width(100);
+            columns.Bound(c => c.Category).Width(100)
+                .Filterable(ftb => ftb
+                    .Multi(true)
+                    .CheckAll(false)
+                    .BindTo(((IEnumerable<CategoryViewModel>) ViewBag.Categories)
+                        .Select(category => new
+                        {
+                            Category = category.Description
+                        }))
+                    .Messages(msg => msg
+                        .SelectedItemsFormat("{0} opciones seleccionadas"))
+                );
             columns.Bound(c => c.Description).Width(200)
                 .ClientTemplate(@"<img src='images/products/\\#=Image ?? 'No image.png'\\#' onclick='onClick(this);' class='rounded-circle' height='80' width='80' asp-append-version='true'/><div class='product-name'>\\#: Description \\#</div>");
             columns.Bound(c => c.Price).Width(75).Format("{0:n2}");
@@ -117,8 +130,10 @@
                     "<ul>" +
                     "<li><label><b>Costo de envío:</b> RD$#= ShippingCost #</label></li>" +
                     "<li><label><b>Descuento:</b> RD$#= Discount #</label></li>" +
-                    "<li><label><b>Pagada en:</b> #= PaidOn #</label></li>" +
-                    "<li><label><b>Enviada en:</b> #= ShippedOn #</label></li>" +
+                    "<li><label><b>Ganancia adicional:</b> RD$#= AdditionalEarnings #</label></li>" +
+                    //"<li><label><b>Pagada en:</b> #= PaidOn #</label></li>" +
+                    //"<li><label><b>Enviada en:</b> #= ShippedOn #</label></li>" +
+                    "<li><label><b>Pagada/Enviada en:</b> #= PaidOrShippedOn #</label></li>" +
                     "</ul>" +
                     "</div>"
                     );
