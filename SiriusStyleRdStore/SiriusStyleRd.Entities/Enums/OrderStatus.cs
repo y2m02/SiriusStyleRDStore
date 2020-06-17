@@ -4,13 +4,13 @@ namespace SiriusStyleRd.Entities.Enums
 {
     public enum OrderStatus
     {
-        [Description("Pendiente")]
+        [Description("1. Pendiente")]
         Pending = 1,
 
-        [Description("Paga")]
+        [Description("2. Paga")]
         Paid = 2,
 
-        [Description("Enviada")]
+        [Description("3. Enviada")]
         Shipped = 3
     }
 }

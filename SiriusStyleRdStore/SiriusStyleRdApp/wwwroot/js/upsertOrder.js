@@ -4,6 +4,7 @@ var discount = 0;
 var additionalEarnings = 0;
 var subTotal = 0;
 var totalPrices = 0;
+var totalChecked = 0;
 
 var checkedValues = [];
 
@@ -123,15 +124,21 @@ function onChange(e) {
     checkedValues = getCheckedValues(grid);
 
     var rows = e.sender.select();
+
     totalPrices = 0;
+    totalChecked = 0;
+
     rows.each(function () {
         var dataItem = grid.dataItem(this);
         totalPrices += parseFloat(dataItem.Price);
+        totalChecked++;
     });
 
     subTotal = totalPrices + shippingCost;
     var total = totalPrices + additionalEarnings - discount;
     setTotalAndSubTotal(subTotal, total);
+
+    window.$("#lblTotalChecked").html(totalChecked);
 }
 
 function getCheckedValues(grid) {

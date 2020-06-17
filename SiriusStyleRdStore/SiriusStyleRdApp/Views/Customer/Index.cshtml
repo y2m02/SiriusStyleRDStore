@@ -12,13 +12,13 @@
     {
         columns.Bound(c => c.CustomerId).Hidden();
         columns.Bound(c => c.FullName).Width(140);
+        columns.Bound(c => c.Instagram).Width(110);
         columns.Bound(c => c.PhoneNumber).Width(98);
         columns.Bound(c => c.City).Width(100);
         columns.Bound(c => c.Sector).Width(100);
         columns.Bound(c => c.Address).Width(100);
         columns.Bound(c => c.Facebook).Width(100);
-        columns.Bound(c => c.Instagram).Width(100);
-        columns.Command(command => command.Destroy().Text("Eliminar")).Width(110);
+        columns.Command(command => command.Destroy().Text("Eliminar")).Width(100);
     })
     .Resizable(r => r.Columns(true))
     .ToolBar(toolbar =>

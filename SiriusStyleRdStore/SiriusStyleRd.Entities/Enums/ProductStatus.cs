@@ -4,11 +4,11 @@ namespace SiriusStyleRd.Entities.Enums
 {
     public enum ProductStatus
     {
-        [Description("Disponible")]
+        [Description("1. Disponible")]
         Available = 1,
-        [Description("Ordenado")]
+        [Description("2. Ordenado")]
         Ordered = 2,
-        [Description("Vendido")]
+        [Description("3. Vendido")]
         Sold = 3
     }
 }

@@ -1,5 +1,5 @@
 ﻿function dataBound() {
-    this.expandRow(this.tbody.find("tr.k-master-row").first());
+    //this.expandRow(this.tbody.find("tr.k-master-row").first());
 
     var grid = window.$("#Orders").data("kendoGrid");
     var totalPending = 0;

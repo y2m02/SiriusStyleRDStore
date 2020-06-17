@@ -116,14 +116,16 @@
 <div id="orderDetailsDiv">
 
     <div class="row">
-        <div class="col-sm-8">
-
+        <div class="col-sm-4">
             @Html.Label("", "Elija los artículos:", new {style = "font-weight:bold"})
         </div>
-        <div class="col-sm-4" style="text-align: right">
+        <div class="col-sm-4" style="text-align: center">
             @Html.Label("", "Subtotal: RD$", new {style = "font-weight:bold"}) @Html.Label("", "0.00", new {style = "font-weight:bold", id = "lblSubTotal"})
             <br/>
             @Html.Label("", "Total: RD$", new {style = "font-weight:bold"}) @Html.Label("", "0.00", new {style = "font-weight:bold", id = "lblTotal"})
+        </div>
+        <div class="col-sm-4" style="text-align: right">
+            @Html.Label("", "Total seleccionados: ", new {style = "font-weight:bold"}) @Html.Label("", "0", new {style = "font-weight:bold", id = "lblTotalChecked"})
         </div>
     </div>
     <div class="row">
@@ -222,7 +224,7 @@
         )
         )
 </div>
-<div style="padding-bottom: 25px; padding-top: 10px;">
+<div style="padding-bottom: 40px; padding-top: 10px;">
     <button type="button" class="btn btn-primary" style="float: left" id="btnGoBack">
         <i class="fas fa-arrow-left "
            aria-hidden="true">

@@ -1,6 +1,7 @@
 ﻿@using SiriusStyleRd.Utility.Extensions
 @using SiriusStyleRd.Entities.ViewModels.Order
 @using SiriusStyleRd.Entities.Enums
+@using Kendo.Mvc
 @{
     ViewData["Title"] = "Órdenes";
     var index = 0;
@@ -60,7 +61,6 @@
             .Pageable(pageable => pageable
                 .Refresh(true)
                 .PageSizes(new[] {20, 35, 50})
-                //.ButtonCount(5)
                 .Messages(msg => msg
                     .Empty("Sin registros")
                     .ItemsPerPage("registros por página")
@@ -114,18 +114,16 @@
                     .Clear("Limpiar")
                 )
             )
-            //.Scrollable(s => s.Height(700))
             .HtmlAttributes(new {style = "width:100%;"})
             .ClientDetailTemplateId("productTemplate")
             .DataSource(dataSource => dataSource
                 .Ajax()
                 .PageSize(20)
                 .ServerOperation(false)
-                //.Events(events => events.Error("error_handler"))
                 .Sort(s => s.Add("Status").Ascending())
                 .Model(model => model.Id(p => p.OrderNumber))
                 .Read(read => read.Action("GetAll", "Order"))
-            //.Group(group => group.Add("Status", typeof(string), ListSortDirection.Ascending))
+            .Group(group => group.Add("Status", typeof(string), ListSortDirection.Ascending))
             )
             .Events(events => events.DataBound("dataBound")))
     </div>
