@@ -55,6 +55,7 @@
                 columns.Command(command => command.Custom("Cancelar").Click("showConfirm")).Width(80);
             }
             )
+            .Scrollable(s=>s.Height(700))
             .Resizable(c => c.Columns(true))
             .Pageable(pageable => pageable
                 .Refresh(true)
