@@ -22,9 +22,10 @@
     });
 
     var grantTotal = totalPending + totalPaidAndShipped;
-    window.$("#lblTotalPending").html(totalPending.toFixed(2));
-    window.$("#lblTotalPaidAndShipped").html(totalPaidAndShipped.toFixed(2));
-    window.$("#lblGrantTotal").html(grantTotal.toFixed(2));
+
+    window.$("#lblTotalPending").html(convertToNumericFormat(totalPending));
+    window.$("#lblTotalPaidAndShipped").html(convertToNumericFormat(totalPaidAndShipped));
+    window.$("#lblGrantTotal").html(convertToNumericFormat(grantTotal));
 }
 
 $("#createOrder").on("click",

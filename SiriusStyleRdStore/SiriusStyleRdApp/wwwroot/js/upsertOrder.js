@@ -175,8 +175,8 @@ function initializeShippingAndDiscount() {
 }
 
 function setTotalAndSubTotal(subTotal, total) {
-    window.$("#lblSubTotal").html(subTotal.toFixed(2));
-    window.$("#lblTotal").html(total.toFixed(2));
+    window.$("#lblSubTotal").html(convertToNumericFormat(subTotal));
+    window.$("#lblTotal").html(convertToNumericFormat(total));
 }
 
 $("#btnSaveOrder").on("click",

@@ -140,3 +140,17 @@ $(function () {
         });
     });
 });
+
+function convertToNumericFormat(quantity) {
+    var fixedQuantity = quantity.toFixed(2);
+    var length = fixedQuantity.length;
+    var digits = 6;
+
+    if (length > digits) {
+        var position = length - digits;
+
+        fixedQuantity = [fixedQuantity.slice(0, position), ",", fixedQuantity.slice(position)].join("");
+    }
+
+    return fixedQuantity;
+}
