@@ -56,6 +56,7 @@ namespace SiriusStyleRdApp.Controllers
                     ItemType.Customer,
                     ItemType.Category,
                     ItemType.Size,
+                    ItemType.Bale,
                 });
 
             if (itemResponse is Success<ItemViewModel> item)
@@ -63,6 +64,7 @@ namespace SiriusStyleRdApp.Controllers
                 ViewBag.Customers = item.Response.Customers;
                 ViewBag.Sizes = item.Response.Sizes;
                 ViewBag.Categories = item.Response.Categories;
+                ViewBag.Bales = item.Response.Bales;
             }
 
             var orderRequest = new OrderRequest

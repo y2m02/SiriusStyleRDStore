@@ -11,11 +11,11 @@
         var dataItem = grid.dataItem(row);
 
         switch (dataItem.Status) {
-        case "Pendiente":
+        case "1. Pendiente":
             totalPending += parseFloat(dataItem.Total);
             break;
-        case "Paga":
-        case "Enviada":
+        case "2. Paga":
+        case "3. Enviada":
             totalPaidAndShipped += parseFloat(dataItem.Total);
             break;
         }

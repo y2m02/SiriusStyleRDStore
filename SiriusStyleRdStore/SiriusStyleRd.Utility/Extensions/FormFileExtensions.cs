@@ -12,7 +12,7 @@ namespace SiriusStyleRd.Utility.Extensions
             if (image.IsEmpty()) return null;
 
             var uploadsFolder = Path.Combine(webHostEnvironment.WebRootPath, "images/products");
-            var uniqueFileName = $"{Guid.NewGuid()}_{image.FileName}";
+            var uniqueFileName = $"{Guid.NewGuid()}W&Y{image.FileName}";
             var filePath = Path.Combine(uploadsFolder, uniqueFileName);
 
             using var fileStream = new FileStream(filePath, FileMode.Create);

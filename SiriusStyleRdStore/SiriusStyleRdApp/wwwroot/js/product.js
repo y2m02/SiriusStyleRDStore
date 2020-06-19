@@ -13,7 +13,7 @@
 function fillFields(rowData) {
     var image = rowData.Image;
     if (image != null) {
-        var fileName = image.split("_")[1];
+        var fileName = image.split("W&Y")[1];
         window.$(".custom-file-input").siblings(".custom-file-label").addClass("selected").html(fileName);
     }
 

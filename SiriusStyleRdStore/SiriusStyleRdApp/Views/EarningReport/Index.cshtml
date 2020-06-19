@@ -24,8 +24,8 @@
         {
             columns.Bound(c => c.Bale).Width(300);
             columns.Bound(c => c.Price).Width(90).Format("{0:n2}");
-            columns.Bound(c => c.TotalEarned).Width(150);
-            columns.Bound(c => c.TotalPending).Width(150);
+            columns.Bound(c => c.TotalEarned).Width(150).Format("{0:n2}");
+            columns.Bound(c => c.TotalPending).Width(150).Format("{0:n2}");
         })
         .Resizable(r => r.Columns(true))
         .Pageable(pageable => pageable
