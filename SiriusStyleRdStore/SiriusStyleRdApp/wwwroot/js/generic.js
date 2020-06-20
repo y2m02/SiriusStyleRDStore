@@ -67,6 +67,8 @@ function fillDropDownList(elementId, result) {
             window.$(option).html(data.description);
             window.$("#" + elementId).append(option);
         });
+
+    window.$("#" + elementId).val(result[result.length - 1].id);
 }
 
 function checkIfValueExists(elementId, id) {

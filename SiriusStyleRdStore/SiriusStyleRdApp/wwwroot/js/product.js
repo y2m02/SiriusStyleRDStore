@@ -76,10 +76,14 @@ $(".custom-file-input").on("change",
     });
 
 function validate() {
+    document.body.style.cursor = 'wait';
+
     var baleIdIsValid = buildError("cbxBales", "lblBalesError");
     var categoryIdIsValid = buildError("cbxCategories", "lblCategoriesError");
     var descriptionIsValid = buildError("txtDescription", "lblDescriptionError");
     var priceIsValid = buildError("txtPrice", "lblPriceError");
+
+    document.body.style.cursor = 'default';
 
     return baleIdIsValid
         && categoryIdIsValid

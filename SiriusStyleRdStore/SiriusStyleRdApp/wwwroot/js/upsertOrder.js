@@ -72,6 +72,8 @@ function isValid() {
 }
 
 function buildOrder() {
+    grid.dataSource.filter([]);
+
     var orderNumber = window.$("#txtOrderNumber").val();
     var customerId = window.$("#cbxCustomers").val();
     var status = window.$("#cbxStatus").val();
@@ -98,6 +100,7 @@ function saveOrder() {
         document.body.style.cursor = 'default';
         return false;
     }
+
     var order = buildOrder();
 
     window.$.ajax({
