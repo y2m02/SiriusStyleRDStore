@@ -3,6 +3,8 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <AssemblyName>SiriusStyleRdApp</AssemblyName>
+    <Authors>Y2M14</Authors>
+    <Copyright>Y2M14</Copyright>
   </PropertyGroup>
 
   <ItemGroup>

@@ -5,15 +5,16 @@
 
 <h1>Ganancias</h1>
 <div class="row" style="text-align: center">
-    <div class="col-sm-3">
-    </div> 
-    <div class="col-sm-3">
+    <div class="col-sm-1">
+    </div>
+    <div class="col-sm-4">
+        @Html.Label("", "Total ganancias brutas: RD$", new { style = "font-weight:bold" })@Html.Label("", "0.00", new { style = "font-weight:bold", id = "lblTotal" })
+    </div>
+    <div class="col-sm-4">
+        @Html.Label("", "Total ganancias netas: RD$", new { style = "font-weight:bold" })@Html.Label("", "0.00", new { style = "font-weight:bold", id = "lblTotalEarning" })
     </div>
     <div class="col-sm-3">
-        @Html.Label("", "Total ganancias: RD$", new {style = "font-weight:bold"})@Html.Label("", "0.00", new {style = "font-weight:bold", id = "lblTotalEarned"})
-    </div>
-    <div class="col-sm-3">
-        @Html.Label("", "Total pendiente: RD$", new {style = "font-weight:bold"})@Html.Label("", "0.00", new {style = "font-weight:bold", id = "lblTotalPending"})
+        @Html.Label("", "Total pendiente: RD$", new { style = "font-weight:bold" })@Html.Label("", "0.00", new { style = "font-weight:bold", id = "lblTotalPending" })
     </div>
 </div>
 <div>
@@ -22,8 +23,9 @@
         .Name("EarningReport")
         .Columns(columns =>
         {
-            columns.Bound(c => c.Bale).Width(300);
+            columns.Bound(c => c.Bale).Width(290);
             columns.Bound(c => c.Price).Width(90).Format("{0:n2}");
+            columns.Bound(c => c.Total).Width(150).Format("{0:n2}");
             columns.Bound(c => c.TotalEarned).Width(150).Format("{0:n2}");
             columns.Bound(c => c.TotalPending).Width(150).Format("{0:n2}");
         })

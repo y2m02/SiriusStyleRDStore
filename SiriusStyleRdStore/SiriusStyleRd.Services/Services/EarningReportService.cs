@@ -39,8 +39,8 @@ namespace SiriusStyleRd.Services.Services
                                  && (w.Order.Status == OrderStatus.Paid
                                      || w.Order.Status == OrderStatus.Shipped)
                         )
-                        .Sum(product => product.Price 
-                                        + (product.Order.AdditionalEarnings.GetValueOrDefault() / product.Order.Products.Count) 
+                        .Sum(product => product.Price
+                                        + (product.Order.AdditionalEarnings.GetValueOrDefault() / product.Order.Products.Count)
                                         - (product.Order.Discount / product.Order.Products.Count));
 
                     var report = new EarningReportViewModel
@@ -48,10 +48,19 @@ namespace SiriusStyleRd.Services.Services
                         BaleId = bale.BaleId,
                         Bale = $"{bale.BaleId} - {bale.Description}",
                         Price = bale.Price,
-                        TotalEarned = total
+                        Total = total
                     };
 
-                    report.TotalPending = report.Price - report.TotalEarned;
+                    if (report.Total >= report.Price)
+                    {
+                        report.TotalPending = 0;
+                        report.TotalEarned = report.Total - report.Price;
+                    }
+                    else
+                    {
+                        report.TotalPending = report.Price - report.Total;
+                        report.TotalEarned = 0;
+                    }
 
                     reports.Add(report);
                 }

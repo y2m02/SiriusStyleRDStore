@@ -20,7 +20,7 @@ function createCustomer() {
         dataType: "json",
         success: function (result) {
             document.body.style.cursor = 'default';
-            GetDropDownListData("cbxCustomers", null, "Customer");
+            GetDropDownListData("cbxCustomers", result.Response.CustomerId, "Customer");
 
             window.$(function () {
                 window.$('#myModalCustomer').modal('toggle');

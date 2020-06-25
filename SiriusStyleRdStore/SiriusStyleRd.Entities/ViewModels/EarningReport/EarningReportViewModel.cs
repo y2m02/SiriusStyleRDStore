@@ -12,10 +12,13 @@ namespace SiriusStyleRd.Entities.ViewModels.EarningReport
         [DisplayName("Precio")]
         public decimal Price { get; set; }
 
-        [DisplayName("Ganancias")]
+        [DisplayName("Ganancias netas")]
         public decimal TotalEarned { get; set; }
 
         [DisplayName("Pendiente")]
         public decimal TotalPending { get; set; }
+
+        [DisplayName("Ganancias brutas")]
+        public decimal Total { get; set; }
     }
 }

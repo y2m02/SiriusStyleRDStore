@@ -8,8 +8,6 @@ using SiriusStyleRd.Entities.ViewModels;
 using SiriusStyleRd.Entities.ViewModels.EarningReport;
 using SiriusStyleRd.Services.Services;
 
-// For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
 namespace SiriusStyleRdApp.Controllers
 {
     public class EarningReportController : Controller

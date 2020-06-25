@@ -89,9 +89,9 @@ namespace SiriusStyleRdApp.Controllers
 
         public async Task<JsonResult> AjaxCreate(CustomerRequest customer)
         {
-            _ = await _customerService.Create(_mapper.Map<CreateCustomerRequest>(customer));
+            var createdCustomer = await _customerService.Create(_mapper.Map<CreateCustomerRequest>(customer));
 
-            return Json(customer);
+            return Json(createdCustomer);
         }
 
         public async Task<JsonResult> GetAllForDropDownList(int? id)
