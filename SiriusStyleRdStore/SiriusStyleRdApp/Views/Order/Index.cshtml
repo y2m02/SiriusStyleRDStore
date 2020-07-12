@@ -38,7 +38,7 @@
                 columns.Bound(c => c.OrderNumber).Hidden().Groupable(false);
                 columns.Bound(c => c.Customer).Width(200);
                 columns.Bound(c => c.CreatedOn).Format("{0:dd/MM/yyyy}").Width(100);
-                columns.Bound(c => c.Status).Width(90)
+                columns.Bound(c => c.Status).Width(120)
                     .Filterable(ftb => ftb
                         .Multi(true)
                         .CheckAll(false)
@@ -50,8 +50,8 @@
                         .Messages(msg => msg
                             .SelectedItemsFormat("{0} opciones seleccionadas"))
                     );
-                columns.Bound(c => c.SubTotal).Width(100).Groupable(false).Format("{0:n2}");
-                columns.Bound(c => c.Total).Width(100).Groupable(false).Format("{0:n2}");
+                columns.Bound(c => c.SubTotal).Width(95).Groupable(false).Format("{0:n2}");
+                columns.Bound(c => c.Total).Width(95).Groupable(false).Format("{0:n2}");
                 columns.Command(command => command.Custom("Editar").HtmlAttributes(new Dictionary<string, object> {["class"] = "editButton"})).Width(80);
                 columns.Command(command => command.Custom("Cancelar").Click("showConfirm")).Width(80);
             }

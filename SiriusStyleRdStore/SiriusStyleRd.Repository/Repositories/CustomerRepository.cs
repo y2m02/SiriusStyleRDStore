@@ -29,6 +29,7 @@ namespace SiriusStyleRd.Repository.Repositories
         {
             return await Context.Customer
                 .Where(w => w.DeletedOn == null)
+                .OrderBy(w => w.FullName)
                 .ToListAsync()
                 .ConfigureAwait(false);
         }
