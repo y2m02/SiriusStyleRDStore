@@ -8,7 +8,14 @@
 @{
     ViewData["Title"] = "Crear - Editar órden";
 
-    var enums = Enum.GetValues(typeof(OrderStatus)).Cast<OrderStatus>()
+    var statuses = Enum.GetValues(typeof(OrderStatus)).Cast<OrderStatus>()
+        .Select(w => new
+        {
+            Id = w,
+            Value = w.GetDescription()
+        });
+
+    var paymentTypes = Enum.GetValues(typeof(PaymentType)).Cast<PaymentType>()
         .Select(w => new
         {
             Id = w,
@@ -16,7 +23,13 @@
         });
 
     var statusSelectList = new SelectList(
-        enums,
+        statuses,
+        "Id",
+        "Value"
+        );
+
+    var paymentTypeSelectList = new SelectList(
+        paymentTypes,
         "Id",
         "Value"
         );
@@ -67,6 +80,20 @@
                 @Html.DropDownListFor(model => model.Order.Status, statusSelectList, "Elija una opción", new {@class = "form-control", Id = "cbxStatus", onchange = "removeErrorMessage('cbxStatus','lblStatusError')"})
             </div>
             <span id="lblStatusError" class="text-danger"></span>
+        </div>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            @Html.LabelFor(model => model.Order.PaymentType)
+            <div class="input-group mb-2 mr-sm-2">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1">
+                        <i class="far fa-credit-card"
+                           aria-hidden="true">
+                        </i>
+                    </span>
+                </div>
+                @Html.DropDownListFor(model => model.Order.PaymentType, paymentTypeSelectList, "Elija una opción", new {@class = "form-control", Id = "cbxPaymentType", onchange = "removeErrorMessage('cbxPaymentType','lblPaymentTypeError')" })
+            </div>
+            <span id="lblPaymentTypeError" class="text-danger"></span>
         </div>
         <div class="col-md-6 col-sm-6 col-xs-12">
             @Html.LabelFor(model => model.Order.ShippingCost)

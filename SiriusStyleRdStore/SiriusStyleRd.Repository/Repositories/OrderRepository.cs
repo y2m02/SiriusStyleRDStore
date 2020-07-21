@@ -52,6 +52,7 @@ namespace SiriusStyleRd.Repository.Repositories
             AddPropertiesToModify(order, new List<string>
             {
                 nameof(order.Status),
+                nameof(order.PaymentType),
                 nameof(order.CustomerId),
                 //nameof(order.ShippedOn),
                 //nameof(order.PaidOn),

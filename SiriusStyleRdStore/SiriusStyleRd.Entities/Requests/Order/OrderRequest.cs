@@ -30,5 +30,8 @@ namespace SiriusStyleRd.Entities.Requests.Order
         public decimal? AdditionalEarnings { get; set; }
 
         public List<string> ProductCodes { get; set; }
+
+        [DisplayName("Forma de pago")]
+        public PaymentType PaymentType { get; set; }
     }
 }

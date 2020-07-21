@@ -57,6 +57,7 @@ $(function () {
 function isValid() {
     var customerIdIsValid = buildError("cbxCustomers", "lblCustomersError");
     var statusIsValid = buildError("cbxStatus", "lblStatusError");
+    var paymentTypeIsValid = buildError("cbxPaymentType", "lblPaymentTypeError");
     var productsIsValid = true;
 
     var total = totalPrices - discount;
@@ -68,6 +69,7 @@ function isValid() {
 
     return customerIdIsValid
         && statusIsValid
+        && paymentTypeIsValid
         && productsIsValid;
 }
 
@@ -77,6 +79,7 @@ function buildOrder() {
     var orderNumber = window.$("#txtOrderNumber").val();
     var customerId = window.$("#cbxCustomers").val();
     var status = window.$("#cbxStatus").val();
+    var paymentType = window.$("#cbxPaymentType").val();
     var subTotal = window.$("#lblSubTotal").html();
     var total = window.$("#lblTotal").html();
     var productCodes = checkedValues;
@@ -85,6 +88,7 @@ function buildOrder() {
         "OrderNumber": orderNumber,
         "CustomerId": customerId,
         "Status": status,
+        "PaymentType": paymentType,
         "ShippingCost": shippingCost,
         "Discount": discount,
         "AdditionalEarnings": additionalEarnings,

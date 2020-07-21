@@ -26,14 +26,16 @@ namespace SiriusStyleRd.Utility.Extensions
                 ? n
                 : 0;
         }
-        
+
         public static T ToEnum<T>(this string str)
         {
-            return (T) Enum.Parse(typeof(T), str);
+            return (T)Enum.Parse(typeof(T), str);
         }
 
         public static T GetEnumValueFromDescription<T>(this string str)
         {
+            if (str.IsEmpty()) return default;
+
             var type = typeof(T);
             if (!type.IsEnum) throw new InvalidOperationException();
             foreach (var field in type.GetFields())

@@ -41,6 +41,8 @@ namespace SiriusStyleRd.Entities.Models
 
         public decimal? AdditionalEarnings { get; set; }
 
+        public PaymentType? PaymentType { get; set; }
+
         [ForeignKey(nameof(CustomerId))] 
         public virtual Customer Customer { get; set; }
 

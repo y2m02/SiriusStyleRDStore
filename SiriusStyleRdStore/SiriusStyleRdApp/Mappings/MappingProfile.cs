@@ -115,11 +115,15 @@ namespace SiriusStyleRdApp.Mappings
                 .ForMember(destination => destination.PaidOrShippedOn,
                     member => member.MapFrom(field => field.PaidOrShippedOn.ToFormattedString(DateFormat.ddMMyyyy)))
                 .ForMember(destination => destination.AdditionalEarnings,
-                    member => member.MapFrom(field => field.AdditionalEarnings.ToNumericFormat(2)));
+                    member => member.MapFrom(field => field.AdditionalEarnings.ToNumericFormat(2)))
+                .ForMember(destination => destination.PaymentType,
+                    member => member.MapFrom(field => field.PaymentType.GetDescription()));
 
             CreateMap<OrderViewModel, OrderRequest>()
                 .ForMember(destination => destination.Status,
-                    member => member.MapFrom(field => field.Status.GetEnumValueFromDescription<OrderStatus>()));
+                    member => member.MapFrom(field => field.Status.GetEnumValueFromDescription<OrderStatus>()))
+                .ForMember(destination => destination.PaymentType,
+                    member => member.MapFrom(field => field.PaymentType.GetEnumValueFromDescription<PaymentType>()));
 
             CreateMap<OrderRequest, CreateOrderRequest>();
             CreateMap<CreateOrderRequest, Order>()

@@ -41,5 +41,8 @@ namespace SiriusStyleRd.Entities.ViewModels.Order
 
         [DisplayName("Ganancia adicional")]
         public string AdditionalEarnings { get; set; }
+
+        [DisplayName("Forma de pago")]
+        public string PaymentType { get; set; }
     }
 }

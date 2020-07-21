@@ -11,7 +11,7 @@
         {
             return number.IsEmpty()
                 ? "0.00"
-                : ((decimal)number).ToString($"N{decimals}");
+                : ((decimal)number).ToNumericFormat(decimals);
         }
     }
 }
